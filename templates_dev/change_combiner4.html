@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours des Billets - TV VIEDER FinTech</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts : Outfit pour un look FinTech très rond et moderne, Roboto Mono pour les chiffres -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Roboto+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #e2e8f0; /* Fond gris très clair (TV background) */
+            overflow: hidden;
+        }
+        .font-numbers {
+            font-family: 'Roboto Mono', monospace;
+        }
+        /* Ligne de séparation verte : design "Pill" doux et net */
+        .clean-divider {
+            background-color: #10b981 !important;
+            width: 4px;
+            position: relative;
+            border-radius: 4px;
+        }
+        /* Style des lignes du tableau (Alternance douce) */
+        .clean-row {
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+        }
+        .clean-row:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        /* Ombre douce globale pour l'écran principal */
+        .soft-shadow {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 40px rgba(0,0,0,0.05);
+        }
+        /* Ombre pour les drapeaux */
+        .flag-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col justify-center items-center antialiased p-2 sm:p-4 select-none">
+
+    <!-- Container d'affichage TV principal (Blanc pur, coins très arrondis) -->
+    <main class="w-full max-w-xl bg-white soft-shadow rounded-[2rem] overflow-hidden flex flex-col relative z-10 border border-slate-100">
+        
+        <!-- EN-TÊTE TV : Design "App FinTech" Clair et coloré -->
+        <header class="relative h-[155px] overflow-hidden flex items-center px-8 bg-slate-50 border-b border-slate-100">
+            
+            <!-- Décoration géométrique abstraite (très subtile) en arrière-plan de l'en-tête -->
+            <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-40">
+                <div class="absolute -top-20 -left-20 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+                <div class="absolute top-10 -right-20 w-72 h-72 bg-emerald-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+            </div>
+
+            <div class="relative w-full z-10 flex items-center justify-between">
+                
+                <!-- LOGO "TV VIEDER" : Style icône d'application moderne (Bouton secret) -->
+                <div id="btn-edit-rates" title="Administration" class="cursor-pointer group w-[110px] h-[110px] bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl shadow-lg flex flex-col items-center justify-center p-2 hover:scale-105 transition-transform duration-300 border-4 border-white">
+                    <div class="flex items-end space-x-1">
+                        <span class="font-black text-3xl text-white leading-none tracking-tighter">T</span>
+                        <span class="font-black text-3xl text-blue-200 leading-none tracking-tighter">V</span>
+                    </div>
+                    <div class="w-12 h-1 bg-blue-400 rounded-full my-1.5 opacity-50"></div>
+                    <span class="font-black text-[13px] text-white tracking-[0.15em]">VIEDER</span>
+                </div>
+
+                <!-- BLOCS DE TEXTES : Clair, gros et ultra-lisible -->
+                <div class="flex-1 text-right pl-4 flex flex-col justify-center">
+                    <h1 class="text-[26px] font-black tracking-tight text-slate-800 leading-none">
+                        COURS DES BILLETS
+                    </h1>
+                    <div class="flex items-center justify-end gap-3 mt-3">
+                        <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[11px] font-extrabold uppercase tracking-widest">
+                            Réf. Bank Al-Maghrib
+                        </span>
+                    </div>
+                    <span id="header-date" class="text-[15px] font-bold text-slate-400 tracking-wide mt-3 block">
+                        19 Mai 2026
+                    </span>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- TABLEAU DES COURS : Clair, aéré, avec des codes couleurs vifs -->
+        <section class="flex-grow bg-white">
+            <table class="w-full text-left border-collapse table-fixed">
+                <colgroup>
+                    <col class="w-[10%]">  <!-- Unité -->
+                    <col class="w-[30%]">  <!-- Devises -->
+                    <col class="w-[15%]">  <!-- Achat -->
+                    <col class="w-[15%]">  <!-- Vente -->
+                    <col class="w-[6px]">   <!-- Ligne de séparation verte (plus épaisse) -->
+                    <col class="w-[15%]">  <!-- Ref BKAM -->
+                    <col class="w-[15%]">  <!-- TPE -->
+                </colgroup>
+
+                <!-- Double En-tête -->
+                <thead class="sticky top-0 z-20 text-[10px] font-bold uppercase tracking-wider bg-white">
+                    
+                    <!-- LIGNE 1 : Catégories divisées (Design "Pill") -->
+                    <tr class="border-b-2 border-slate-100">
+                        <!-- Côté Gauche : TAUX DE CHANGE -->
+                        <td colspan="4" class="py-3 px-3">
+                            <div class="bg-blue-50 text-blue-700 rounded-xl py-2 px-4 inline-block text-[11px] font-black tracking-widest text-center w-full">
+                                TAUX DE CHANGE
+                            </div>
+                        </td>
+                        <!-- Jonction de la ligne verte de division -->
+                        <td class="p-0 relative bg-white">
+                            <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 h-full clean-divider"></div>
+                        </td>
+                        <!-- Côté Droit : ACHAT PAR CARTE - TPE -->
+                        <td colspan="2" class="py-3 px-3">
+                            <div class="bg-emerald-50 text-emerald-700 rounded-xl py-2 px-4 inline-block text-[11px] font-black tracking-widest text-center w-full">
+                                CARTE / TPE
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- LIGNE 2 : Noms de colonnes -->
+                    <tr class="border-b border-slate-200 text-slate-400 text-[10px]">
+                        <th class="py-3 px-1 text-center font-extrabold tracking-wider">Unité</th>
+                        <th class="py-3 px-2 text-left font-extrabold tracking-wider">Devise</th>
+                        <th class="py-3 px-1 text-center text-rose-500 font-black">Achat</th>
+                        <th class="py-3 px-1 text-center text-blue-600 font-black">Vente</th>
+                        <!-- Ligne verticale -->
+                        <th class="p-0 relative bg-white">
+                            <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 h-full clean-divider"></div>
+                        </th>
+                        <th class="py-3 px-1 text-center text-emerald-600 font-black">Ref BKAM</th>
+                        <th class="py-3 px-1 text-center text-amber-500 font-black">TPE (-5%)</th>
+                    </tr>
+                </thead>
+
+                <!-- Corps du tableau : Généré par JS -->
+                <tbody id="rates-table-body">
+                    <!-- Les rangées sont insérées ici -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- MODAL D'ÉDITION DES TAUX (Version Light Mode) -->
+        <div id="editor-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden transition-opacity">
+            <div class="bg-white border border-slate-200 w-full max-w-sm rounded-[2rem] p-6 shadow-2xl max-h-[85vh] flex flex-col">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+                    <h3 class="font-black text-lg text-slate-800 tracking-tight">Configuration</h3>
+                    <button id="close-editor-modal" class="bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-full w-8 h-8 flex items-center justify-center font-bold transition-colors">&times;</button>
+                </div>
+                
+                <div class="space-y-2 mb-4">
+                    <label class="block text-[11px] text-slate-500 font-bold uppercase tracking-wider">Date affichée</label>
+                    <input type="text" id="edit-header-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 font-bold focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all">
+                </div>
+
+                <div id="editor-form-container" class="space-y-3 overflow-y-auto pr-2 flex-grow scrollbar-thin">
+                    <!-- Rempli par le script -->
+                </div>
+
+                <div class="border-t border-slate-100 pt-4 mt-4 flex gap-3">
+                    <button id="btn-reset-rates" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-black text-xs transition-colors">Réinitialiser</button>
+                    <button id="btn-save-rates" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-black text-xs shadow-lg shadow-blue-200 transition-colors">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Script Javascript -->
+    <script>
+        const initialRatesData = [
+            { id: "EUR", unite: 1, name: "Europe", buy: 10.44, sell: 11.08, bkam: 10.71, tpe: 10.18, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#003399"/><g fill="#ffcc00" transform="translate(256,256) scale(26)"><circle r="4" fill="none"/><g id="star"><path d="m0-1.2.3.9h1l-.8.6.3.9-.8-.6-.8.6.3-.9-.8-.6h1z"/></g><use href="#star" y="-7.5"/><use href="#star" y="7.5"/><use href="#star" x="-7.5"/><use href="#star" x="7.5"/><use href="#star" x="-5.3" y="-5.3"/><use href="#star" x="5.3" y="-5.3"/><use href="#star" x="-5.3" y="5.3"/><use href="#star" x="5.3" y="5.3"/><use href="#star" x="-7.2" y="-2.3"/><use href="#star" x="7.2" y="-2.3"/><use href="#star" x="-7.2" y="2.3"/><use href="#star" x="7.2" y="2.3"/></g></svg>` },
+            { id: "USD", unite: 1, name: "Etats Unis", buy: 8.98, sell: 9.52, bkam: 9.21, tpe: 8.75, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#bb133e"/><path d="M0,39h512M0,118h512M0,196h512M0,275h512M0,354h512M0,433h512" stroke="#fff" stroke-width="39"/><rect width="205" height="275" fill="#002147"/><g fill="#fff"><g id="us-s5"><g id="us-s4"><g id="us-s3"><g id="us-s2"><g id="us-s1"><circle cx="17" cy="23" r="6"/></g><circle cx="51" cy="23" r="6"/></g><circle cx="85" cy="23" r="6"/></g><circle cx="119" cy="23" r="6"/></g><circle cx="153" cy="23" r="6"/></g><use href="#us-s5" y="46"/><use href="#us-s5" y="92"/><use href="#us-s5" y="138"/><use href="#us-s5" y="184"/><g id="us-s4-row" x="17" y="23"><use href="#us-s4" x="17" y="23"/><use href="#us-s4" x="17" y="69"/><use href="#us-s4" x="17" y="115"/><use href="#us-s4" x="17" y="161"/></g></g></svg>` },
+            { id: "CAD", unite: 1, name: "Canada", buy: 6.53, sell: 6.93, bkam: 6.70, tpe: 6.36, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#ff0000"/><rect x="128" width="256" height="512" fill="#ffffff"/><path d="M256,120 L275,180 L335,160 L310,215 L360,240 L300,265 L315,330 L275,300 L256,380 L237,300 L197,330 L212,265 L152,240 L202,215 L177,160 L237,180 Z" fill="#ff0000"/></svg>` },
+            { id: "GBP", unite: 1, name: "Angleterre", buy: 12.03, sell: 12.76, bkam: 12.31, tpe: 11.69, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#012169"/><path d="M0 0 L512 512 M0 512 L512 0" stroke="#fff" stroke-width="60"/><path d="M0 0 L512 512 M0 512 L512 0" stroke="#C8102E" stroke-width="40"/><path d="M256 0 V512 M0 256 H512" stroke="#fff" stroke-width="100"/><path d="M256 0 V512 M0 256 H512" stroke="#C8102E" stroke-width="60"/></svg>` },
+            { id: "GIP", unite: 1, name: "Gibraltar", buy: 12.03, sell: 12.76, bkam: 12.31, tpe: 11.69, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#ffffff"/><rect y="341" width="512" height="171" fill="#da0012"/><g fill="#da0012" transform="translate(196, 120)"><rect x="30" y="60" width="60" height="120"/><rect x="150" y="20" width="60" height="160"/><rect x="230" y="60" width="60" height="120"/><rect x="30" y="160" width="260" height="20"/></g></svg>` },
+            { id: "CHF", unite: 1, name: "Suisse", buy: 11.42, sell: 12.12, bkam: 11.72, tpe: 11.14, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#d52b1e"/><rect x="226" y="106" width="60" height="300" fill="#fff"/><rect x="106" y="226" width="300" height="60" fill="#fff"/></svg>` },
+            { id: "SAR", unite: 1, name: "Arabie Saou...", buy: 2.39, sell: 2.54, bkam: 2.45, tpe: 2.33, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#0b6623"/><path d="M100,280 L412,280 M150,300 L362,300 M256,260 L256,320" stroke="#fff" stroke-width="8"/><path d="M150,350 L362,350" stroke="#fff" stroke-width="4"/></svg>` },
+            { id: "KWD", unite: 1, name: "Koweit", buy: 29.04, sell: 30.81, bkam: 29.83, tpe: 28.34, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="170.6" fill="#128a41"/><rect y="170.6" width="512" height="170.6" fill="#fff"/><rect y="341.2" width="512" height="170.6" fill="#f31830"/><path d="M0 0 L150 170.6 L0 341.2 Z" fill="#000000"/></svg>` },
+            { id: "AED", unite: 1, name: "Emirats Arab...", buy: 2.44, sell: 2.59, bkam: 2.51, tpe: 2.38, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="170.6" fill="#00732f"/><rect y="170.6" width="512" height="170.6" fill="#ffffff"/><rect y="341.2" width="512" height="170.6" fill="#000000"/><rect width="128" height="512" fill="#ff0000"/></svg>` },
+            { id: "QAR", unite: 1, name: "Qatar", buy: 2.46, sell: 2.61, bkam: 2.53, tpe: 2.40, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#8a1538"/><path d="M0 0 H140 L190 28.4 L140 56.8 L190 85.2 L140 113.6 L190 142 L140 170.4 L190 198.8 L140 227.2 L190 255.6 L140 284 L190 312.4 L140 340.8 L190 369.2 L140 397.6 L190 426 L140 454.4 L190 482.8 L140 512 H0 Z" fill="#ffffff"/></svg>` },
+            { id: "BHD", unite: 1, name: "Bahrein", buy: 23.81, sell: 25.26, bkam: 24.41, tpe: 23.19, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#da121a"/><path d="M0 0 H140 L190 51.2 L140 102.4 L190 153.6 L140 204.8 L190 256 L140 307.2 L190 358.4 L140 409.6 L190 460.8 L140 512 H0 Z" fill="#ffffff"/></svg>` },
+            { id: "JPY", unite: 100, name: "Japon", buy: 5.64, sell: 5.99, bkam: 5.80, tpe: 5.51, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#ffffff"/><circle cx="256" cy="256" r="120" fill="#bc002d"/></svg>` }
+        ];
+
+        let rates = [...initialRatesData];
+
+        const tableBody = document.getElementById('rates-table-body');
+        const editorModal = document.getElementById('editor-modal');
+        const headerDate = document.getElementById('header-date');
+        const editHeaderDateInput = document.getElementById('edit-header-date');
+        
+        const btnEditRates = document.getElementById('btn-edit-rates');
+        const editorFormContainer = document.getElementById('editor-form-container');
+        const closeEditorModalBtn = document.getElementById('close-editor-modal');
+        const btnSaveRates = document.getElementById('btn-save-rates');
+        const btnResetRates = document.getElementById('btn-reset-rates');
+
+        function formatNumber(num) {
+            return num.toFixed(2).replace('.', ',');
+        }
+
+        // Rendu du tableau avec le design FinTech
+        function renderTable() {
+            tableBody.innerHTML = "";
+
+            rates.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "clean-row border-b border-slate-100 last:border-0";
+                
+                tr.innerHTML = `
+                    <!-- UNITÉ -->
+                    <td class="py-3 px-1 text-center text-[12px] font-bold text-slate-400 font-numbers">
+                        ${item.unite}
+                    </td>
+                    <!-- DEVISE + DRAPEAU ROND -->
+                    <td class="py-3 px-2 flex items-center space-x-3">
+                        <div class="w-[26px] h-[26px] rounded-full overflow-hidden bg-white flag-shadow shrink-0 border border-slate-100 p-[1px]">
+                            <div class="w-full h-full rounded-full overflow-hidden">
+                                ${item.flag}
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <span class="text-[13px] font-extrabold text-slate-800 tracking-tight leading-none">${item.name}</span>
+                            <span class="text-[10px] font-bold text-slate-400 tracking-wider mt-0.5 leading-none">${item.id}</span>
+                        </div>
+                    </td>
+                    <!-- ACHAT -->
+                    <td class="py-3 px-1 text-center text-[14px] font-black text-rose-600 font-numbers">
+                        ${formatNumber(item.buy)}
+                    </td>
+                    <!-- VENTE -->
+                    <td class="py-3 px-1 text-center text-[14px] font-black text-blue-600 font-numbers">
+                        ${formatNumber(item.sell)}
+                    </td>
+                    <!-- Séparateur vert continu -->
+                    <td class="p-0 relative">
+                        <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 h-full clean-divider"></div>
+                    </td>
+                    <!-- REF BKAM -->
+                    <td class="py-3 px-1 text-center text-[14px] font-black text-emerald-600 font-numbers">
+                        ${formatNumber(item.bkam)}
+                    </td>
+                    <!-- TPE -->
+                    <td class="py-3 px-1 text-center text-[14px] font-black text-amber-500 font-numbers">
+                        ${formatNumber(item.tpe)}
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Configuration des cours (Light Mode Modal)
+        btnEditRates.addEventListener('click', () => {
+            editHeaderDateInput.value = headerDate.textContent.trim();
+            editorFormContainer.innerHTML = "";
+            rates.forEach(item => {
+                const row = document.createElement('div');
+                row.className = "bg-white p-3 rounded-2xl border border-slate-200 shadow-sm space-y-2";
+                row.innerHTML = `
+                    <div class="flex items-center space-x-2 border-b border-slate-100 pb-2 mb-2">
+                        <div class="w-6 h-6 rounded-full overflow-hidden border border-slate-100 shrink-0">${item.flag}</div>
+                        <span class="font-bold text-sm text-slate-800">${item.name} <span class="text-slate-400 text-xs font-normal">(${item.id})</span></span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] text-slate-500 font-bold uppercase mb-1">Achat</label>
+                            <input type="number" step="0.01" data-id="${item.id}" data-type="buy" value="${item.buy}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-sm text-slate-800 text-center font-bold focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-500 font-bold uppercase mb-1">Vente</label>
+                            <input type="number" step="0.01" data-id="${item.id}" data-type="sell" value="${item.sell}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-sm text-slate-800 text-center font-bold focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-500 font-bold uppercase mb-1">BKAM</label>
+                            <input type="number" step="0.01" data-id="${item.id}" data-type="bkam" value="${item.bkam}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-sm text-slate-800 text-center font-bold focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-500 font-bold uppercase mb-1">TPE</label>
+                            <input type="number" step="0.01" data-id="${item.id}" data-type="tpe" value="${item.tpe}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-sm text-slate-800 text-center font-bold focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                `;
+                editorFormContainer.appendChild(row);
+            });
+            editorModal.classList.remove('hidden');
+        });
+
+        closeEditorModalBtn.addEventListener('click', () => editorModal.classList.add('hidden'));
+
+        btnSaveRates.addEventListener('click', () => {
+            if (editHeaderDateInput.value.trim() !== "") {
+                headerDate.textContent = editHeaderDateInput.value;
+            }
+
+            const inputs = editorFormContainer.querySelectorAll('input');
+            inputs.forEach(input => {
+                const id = input.getAttribute('data-id');
+                const type = input.getAttribute('data-type');
+                if (id && type) {
+                    const val = parseFloat(input.value) || 0;
+                    const item = rates.find(r => r.id === id);
+                    if (item) {
+                        item[type] = val;
+                    }
+                }
+            });
+            renderTable();
+            editorModal.classList.add('hidden');
+        });
+
+        btnResetRates.addEventListener('click', () => {
+            rates = JSON.parse(JSON.stringify(initialRatesData));
+            headerDate.textContent = "19 Mai 2026";
+            editorModal.classList.add('hidden');
+            renderTable();
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === editorModal) editorModal.classList.add('hidden');
+        });
+
+        window.onload = function() {
+            renderTable();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "rates": [
+    { "code": "USD", "label": "Dollar Americain", "unit": "1", "buy": "9,85", "sell": "10,05", "icon": "" },
+    { "code": "EUR", "label": "Euro", "unit": "1", "buy": "10,70", "sell": "10,95", "icon": "" },
+    { "code": "GBP", "label": "Livre Sterling", "unit": "1", "buy": "12,50", "sell": "12,80", "icon": "" },
+    { "code": "CHF", "label": "Franc Suisse", "unit": "1", "buy": "11,20", "sell": "11,45", "icon": "" },
+    { "code": "CAD", "label": "Dollar Canadien", "unit": "1", "buy": "7,15", "sell": "7,35", "icon": "" },
+    { "code": "SAR", "label": "Riyal Saoudien", "unit": "1", "buy": "2,60", "sell": "2,70", "icon": "" },
+    { "code": "AED", "label": "Dirham Emirien", "unit": "1", "buy": "2,65", "sell": "2,75", "icon": "" },
+    { "code": "KWD", "label": "Dinar Koweitien", "unit": "1", "buy": "32,00", "sell": "33,00", "icon": "" },
+    { "code": "QAR", "label": "Riyal Qatari", "unit": "1", "buy": "2,65", "sell": "2,80", "icon": "" },
+    { "code": "BHD", "label": "Dinar Bahreinien", "unit": "1", "buy": "26,00", "sell": "27,00", "icon": "" },
+    { "code": "OMR", "label": "Riyal Omanien", "unit": "1", "buy": "25,50", "sell": "26,50", "icon": "" },
+    { "code": "JPY", "label": "Yen Japonais", "unit": "100", "buy": "6,50", "sell": "6,80", "icon": "" },
+    { "code": "DKK", "label": "Couronne Danoise", "unit": "1", "buy": "1,43", "sell": "1,48", "icon": "" },
+    { "code": "SEK", "label": "Couronne Suedoise", "unit": "1", "buy": "0,98", "sell": "1,03", "icon": "" },
+    { "code": "NOK", "label": "Couronne Norvegienne", "unit": "1", "buy": "0,95", "sell": "1,00", "icon": "" },
+    { "code": "GIP", "label": "Livre Gibraltarienne", "unit": "1", "buy": "12,50", "sell": "12,80", "icon": "" },
+    { "code": "CHF-1", "label": "Franc Suisse (coupure)", "unit": "1", "buy": "11,10", "sell": "11,35", "icon": "" }
+  ],
+  "updatedAt": "2026-04-06T10:30:00.000Z",
+  "stale": false,
+  "error": null
+}

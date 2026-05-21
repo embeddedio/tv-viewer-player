@@ -1,0 +1,119 @@
+{
+  "orientation": "landscape-left",
+  "ticker": {
+    "heightPercent": 10,
+    "itemGap": 28,
+    "scale": 90,
+    "speed": 100,
+    "items": [
+      {
+        "code": "EUR",
+        "label": "Europe : Euro - EUR",
+        "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/eur.png",
+        "buyLabel": "Achat",
+        "sellLabel": "Vente",
+        "buy": "10,50",
+        "sell": "11,14"
+      },
+      {
+        "code": "USD",
+        "label": "Etats Unis : Dollar U.S.A. - USD",
+        "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/usd.png",
+        "buyLabel": "Achat",
+        "sellLabel": "Vente",
+        "buy": "9,05",
+        "sell": "9,60"
+      },
+      {
+        "code": "CAD",
+        "label": "Canada : Dollar Canadien - CAD",
+        "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/cad.png",
+        "buyLabel": "Achat",
+        "sellLabel": "Vente",
+        "buy": "6,63",
+        "sell": "7,03"
+      },
+      {
+        "code": "GBP",
+        "label": "Angleterre : Livre Sterling - GBP",
+        "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/gbp.png",
+        "buyLabel": "Achat",
+        "sellLabel": "Vente",
+        "buy": "12,07",
+        "sell": "12,80"
+      },
+      {
+        "code": "GIP",
+        "label": "Gibraltar : Livre Gibraltar - GIP",
+        "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/gip.png",
+        "buyLabel": "Achat",
+        "sellLabel": "Vente",
+        "buy": "12,07",
+        "sell": "12,80"
+      },
+      {
+        "code": "CHF-1",
+        "label": "Suisse : Franc Suisse - CHF",
+        "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/chf-1.png",
+        "buyLabel": "Achat",
+        "sellLabel": "Vente",
+        "buy": "11,59",
+        "sell": "12,30"
+      },
+      {
+        "code": "SAR",
+        "label": "Arabie Saoudite : Riyal Saoudien - SAR",
+        "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/sar.png",
+        "buyLabel": "Achat",
+        "sellLabel": "Vente",
+        "buy": "2,41",
+        "sell": "2,56"
+      },
+      {
+        "code": "KWD",
+        "label": "Koweit : Dinar Koweitien - KWD",
+        "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/kwd.png",
+        "buyLabel": "Achat",
+        "sellLabel": "Vente",
+        "buy": "29,40",
+        "sell": "31,19"
+      },
+      {
+        "code": "AED",
+        "label": "Emirats Arabes Unis : Dirham E.A.U - AED",
+        "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/aed.png",
+        "buyLabel": "Achat",
+        "sellLabel": "Vente",
+        "buy": "2,46",
+        "sell": "2,61"
+      },
+      {
+        "code": "QAR",
+        "label": "Qatar : Riyal Qatari - QAR",
+        "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/qar.png",
+        "buyLabel": "Achat",
+        "sellLabel": "Vente",
+        "buy": "2,48",
+        "sell": "2,63"
+      },
+      {
+        "code": "BHD",
+        "label": "Bahrein : Dinar Bahreini - BHD",
+        "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/bhd.png",
+        "buyLabel": "Achat",
+        "sellLabel": "Vente",
+        "buy": "23,98",
+        "sell": "25,44"
+      },
+      {
+        "code": "JPY",
+        "label": "Japon : Yen Japonais - JPY",
+        "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/jpy.png",
+        "buyLabel": "Achat",
+        "sellLabel": "Vente",
+        "buy": "5,76",
+        "sell": "6,11"
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "tv-viewer-player",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "EXPO_TV=1 expo start",
+    "android": "EXPO_TV=1 expo run:android",
+    "ios": "EXPO_TV=1 expo run:ios",
+    "web": "expo start --web",
+    "prebuild": "expo prebuild --clean",
+    "prebuild:tv": "EXPO_TV=1 expo prebuild --clean",
+    "sync:server": "./sync-node-server.sh",
+    "build:admin": "cd server/views && npm run build",
+    "validate": "node scripts/validate-all.js",
+    "export": "node scripts/export-widget.js",
+    "export:all": "node scripts/export-all.js",
+    "capture": "adb shell screencap -p /sdcard/capture.png && adb pull /sdcard/capture.png /tmp/capture.png && adb shell rm /sdcard/capture.png"
+  },
+  "dependencies": {
+    "@expo/metro-runtime": "~6.1.1",
+    "expo": "^54.0.20",
+    "expo-audio": "~1.1.1",
+    "expo-status-bar": "~3.0.8",
+    "expo-video": "~3.0.15",
+    "module-writer": "file:./modules/module-writer",
+    "nodejs-mobile-react-native": "^18.20.4",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-native": "npm:react-native-tvos@0.81-stable",
+    "react-native-view-shot": "^5.1.0",
+    "react-native-web": "^0.21.0",
+    "react-native-webview": "^13.16.1"
+  },
+  "devDependencies": {
+    "@react-native-tvos/config-tv": "^0.1.4",
+    "@types/react": "~19.1.10",
+    "typescript": "~5.9.2"
+  },
+  "expo": {
+    "install": {
+      "exclude": [
+        "react-native"
+      ]
+    }
+  },
+  "private": true
+}

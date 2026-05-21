@@ -1,0 +1,103 @@
+{
+  "updatedAt": "2026-03-06T19:54:08.138Z",
+  "rates": [
+    {
+      "unit": "1",
+      "code": "EUR",
+      "label": "Europe : Euro - EUR",
+      "buy": "10,50",
+      "sell": "11,14",
+      "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/eur.png"
+    },
+    {
+      "unit": "1",
+      "code": "USD",
+      "label": "Etats Unis : Dollar U.S.A. - USD",
+      "buy": "9,05",
+      "sell": "9,60",
+      "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/usd.png"
+    },
+    {
+      "unit": "1",
+      "code": "CAD",
+      "label": "Canada : Dollar Canadien - CAD",
+      "buy": "6,63",
+      "sell": "7,03",
+      "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/cad.png"
+    },
+    {
+      "unit": "1",
+      "code": "GBP",
+      "label": "Angleterre : Livre Sterling - GBP",
+      "buy": "12,07",
+      "sell": "12,80",
+      "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/gbp.png"
+    },
+    {
+      "unit": "1",
+      "code": "GIP",
+      "label": "Gibraltar : Livre Gibraltar - GIP",
+      "buy": "12,07",
+      "sell": "12,80",
+      "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/gip.png"
+    },
+    {
+      "unit": "1",
+      "code": "CHF-1",
+      "label": "Suisse : Franc Suisse - CHF",
+      "buy": "11,59",
+      "sell": "12,30",
+      "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/chf-1.png"
+    },
+    {
+      "unit": "1",
+      "code": "SAR",
+      "label": "Arabie Saoudite : Riyal Saoudien - SAR",
+      "buy": "2,41",
+      "sell": "2,56",
+      "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/sar.png"
+    },
+    {
+      "unit": "1",
+      "code": "KWD",
+      "label": "Koweit : Dinar Koweitien - KWD",
+      "buy": "29,40",
+      "sell": "31,19",
+      "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/kwd.png"
+    },
+    {
+      "unit": "1",
+      "code": "AED",
+      "label": "Emirats Arabes Unis : Dirham E.A.U - AED",
+      "buy": "2,46",
+      "sell": "2,61",
+      "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/aed.png"
+    },
+    {
+      "unit": "1",
+      "code": "QAR",
+      "label": "Qatar : Riyal Qatari - QAR",
+      "buy": "2,48",
+      "sell": "2,63",
+      "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/qar.png"
+    },
+    {
+      "unit": "1",
+      "code": "BHD",
+      "label": "Bahrein : Dinar Bahreini - BHD",
+      "buy": "23,98",
+      "sell": "25,44",
+      "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/bhd.png"
+    },
+    {
+      "unit": "100",
+      "code": "JPY",
+      "label": "Japon : Yen Japonais - JPY",
+      "buy": "5,76",
+      "sell": "6,11",
+      "icon": "https://bestchangetanger.com/wp-content/uploads/2022/02/jpy.png"
+    }
+  ],
+  "stale": false,
+  "error": null
+}

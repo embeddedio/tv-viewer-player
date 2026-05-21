@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours des Billets - TV VIEDER Institutional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Polices: 'Plus Jakarta Sans' pour une élégance moderne, 'JetBrains Mono' pour les chiffres financiers -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #060B14; /* Bleu Nuit très profond / Premium Navy */
+            color: #ffffff;
+            overflow: hidden; /* Strictement aucun défilement pour un écran TV */
+            margin: 0;
+            padding: 0;
+        }
+        .num-font {
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums; /* Alignement vertical parfait des chiffres */
+        }
+        /* Table Layout strict pour la TV */
+        .tv-table {
+            height: 100%;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+        /* Lignes du tableau alternées pour la lisibilité */
+        .premium-row {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            background-color: #080D1A;
+            transition: background-color 0.2s ease;
+        }
+        .premium-row:nth-child(even) {
+            background-color: #0B1120;
+        }
+        /* Ligne de séparation centrale - Vert Émeraude Institutionnel Mat */
+        .emerald-divider {
+            background-color: #10B981;
+            width: 4px;
+            box-shadow: inset 0 0 2px rgba(0,0,0,0.2);
+        }
+        /* Motif Map du monde discret pour l'en-tête */
+        .bg-world-map {
+            background-image: url("data:image/svg+xml,%3Csvg width='800' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='400' cy='200' r='1.5'/%3E%3Ccircle cx='420' cy='190' r='1.5'/%3E%3Ccircle cx='440' cy='185' r='1.5'/%3E%3Ccircle cx='460' cy='195' r='1.5'/%3E%3Ccircle cx='380' cy='210' r='1.5'/%3E%3Ccircle cx='360' cy='205' r='1.5'/%3E%3Ccircle cx='390' cy='180' r='1.5'/%3E%3Ccircle cx='410' cy='170' r='1.5'/%3E%3Ccircle cx='430' cy='175' r='1.5'/%3E%3Ccircle cx='450' cy='185' r='1.5'/%3E%3Ccircle cx='470' cy='200' r='1.5'/%3E%3Ccircle cx='480' cy='215' r='1.5'/%3E%3Ccircle cx='490' cy='230' r='1.5'/%3E%3Ccircle cx='370' cy='190' r='1.5'/%3E%3Ccircle cx='350' cy='185' r='1.5'/%3E%3Ccircle cx='330' cy='195' r='1.5'/%3E%3Ccircle cx='310' cy='210' r='1.5'/%3E%3Ccircle cx='290' cy='205' r='1.5'/%3E%3Ccircle cx='270' cy='190' r='1.5'/%3E%3Ccircle cx='250' cy='185' r='1.5'/%3E%3Ccircle cx='230' cy='195' r='1.5'/%3E%3Ccircle cx='210' cy='210' r='1.5'/%3E%3Ccircle cx='190' cy='205' r='1.5'/%3E%3Ccircle cx='170' cy='190' r='1.5'/%3E%3Ccircle cx='150' cy='185' r='1.5'/%3E%3Ccircle cx='130' cy='195' r='1.5'/%3E%3Ccircle cx='110' cy='210' r='1.5'/%3E%3Ccircle cx='500' cy='200' r='1.5'/%3E%3Ccircle cx='520' cy='190' r='1.5'/%3E%3Ccircle cx='540' cy='185' r='1.5'/%3E%3Ccircle cx='560' cy='195' r='1.5'/%3E%3Ccircle cx='580' cy='210' r='1.5'/%3E%3Ccircle cx='600' cy='205' r='1.5'/%3E%3Ccircle cx='620' cy='190' r='1.5'/%3E%3Ccircle cx='640' cy='185' r='1.5'/%3E%3Ccircle cx='660' cy='195' r='1.5'/%3E%3Ccircle cx='680' cy='210' r='1.5'/%3E%3Ccircle cx='700' cy='205' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+        }
+        /* Ombre douce sous l'en-tête */
+        .header-shadow {
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col select-none">
+
+    <!-- EN-TÊTE (Header) - 13% de la hauteur de l'écran -->
+    <header class="h-[13vh] flex items-center justify-between px-8 bg-[#090F1B] border-b border-[#1E293B] shrink-0 relative header-shadow z-20 overflow-hidden">
+        
+        <!-- Fond Carte du monde -->
+        <div class="absolute inset-0 bg-world-map z-0 pointer-events-none"></div>
+
+        <!-- LOGO (Bouton d'édition secret) -->
+        <div id="btn-edit-rates" title="Administration" class="cursor-pointer flex items-center gap-4 h-full py-2 z-10 group">
+            <div class="h-full aspect-square bg-gradient-to-b from-[#1E293B] to-[#0F172A] border border-[#334155] rounded-xl flex items-center justify-center shadow-lg group-hover:border-[#D4AF37] transition-colors duration-300">
+                <div class="flex flex-col items-center justify-center leading-none">
+                    <span class="text-2xl font-black text-white tracking-tighter">TV</span>
+                </div>
+            </div>
+            <div class="flex flex-col justify-center">
+                <span class="text-[26px] font-black tracking-widest text-white leading-none">VIEDER</span>
+                <span class="text-[11px] font-bold tracking-[0.25em] text-[#94A3B8] uppercase mt-1.5 flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span> Bureau de Change
+                </span>
+            </div>
+        </div>
+
+        <!-- TITRE CENTRAL (Sobre et Chic) -->
+        <div class="flex flex-col items-center justify-center z-10">
+            <h1 class="text-[28px] font-extrabold tracking-widest uppercase text-white drop-shadow-md">Cours des Devises</h1>
+            <div class="flex items-center gap-3 mt-1.5">
+                <div class="h-[1px] w-8 bg-[#D4AF37]"></div>
+                <span class="text-sm font-bold tracking-[0.2em] text-[#D4AF37] uppercase" id="header-date">19 MAI 2026</span>
+                <div class="h-[1px] w-8 bg-[#D4AF37]"></div>
+            </div>
+        </div>
+
+        <!-- HORLOGE EN DIRECT -->
+        <div class="flex flex-col items-end justify-center z-10">
+            <span class="text-[10px] font-bold tracking-[0.2em] text-[#94A3B8] uppercase mb-1">Heure Locale</span>
+            <div class="bg-[#040811] border border-[#1E293B] px-5 py-2 rounded-lg shadow-inner">
+                <span id="live-clock" class="text-2xl font-bold num-font text-white tracking-wider">00:00:00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- CORPS DU TABLEAU - 87% de la hauteur de l'écran -->
+    <main class="flex-grow h-[87vh] bg-[#060B14] relative z-10">
+        <table class="tv-table">
+            <colgroup>
+                <col class="w-[8%]">   <!-- Unité -->
+                <col class="w-[28%]">  <!-- Devises -->
+                <col class="w-[15%]">  <!-- Achat -->
+                <col class="w-[15%]">  <!-- Vente -->
+                <col class="w-[4px]">  <!-- Séparateur Émeraude -->
+                <col class="w-[17%]">  <!-- Ref BKAM -->
+                <col class="w-[17%]">  <!-- TPE -->
+            </colgroup>
+
+            <thead class="bg-[#090F1A] shrink-0 h-[10vh] border-b border-[#1E293B]">
+                <!-- Ligne 1 : Catégories -->
+                <tr>
+                    <th colspan="4" class="text-center py-2.5">
+                        <span class="inline-block bg-[#1E293B]/40 text-[#F8FAFC] border border-[#334155]/50 px-6 py-1.5 rounded text-xs font-bold tracking-[0.2em] uppercase">
+                            Taux de Change (Cash)
+                        </span>
+                    </th>
+                    <th class="p-0 relative">
+                        <div class="absolute inset-y-0 left-0 w-full emerald-divider z-10"></div>
+                    </th>
+                    <th colspan="2" class="text-center py-2.5 bg-[#061812]/50">
+                        <span class="inline-block bg-[#064E3B]/30 text-[#34D399] border border-[#047857]/50 px-6 py-1.5 rounded text-xs font-bold tracking-[0.2em] uppercase">
+                            Achat par Carte (TPE)
+                        </span>
+                    </th>
+                </tr>
+                <!-- Ligne 2 : Noms des colonnes -->
+                <tr class="text-[11px] font-bold text-[#64748B] uppercase tracking-[0.15em]">
+                    <th class="text-center pb-3">Unité</th>
+                    <th class="text-left pl-6 pb-3">Devises</th>
+                    <!-- Couleurs mates et professionnelles : Rouge Rubis et Bleu Saphir -->
+                    <th class="text-center text-[#E11D48] pb-3">Achat</th>
+                    <th class="text-center text-[#3B82F6] pb-3">Vente</th>
+                    <th class="p-0 relative">
+                        <div class="absolute top-0 left-0 w-full h-full emerald-divider z-10"></div>
+                    </th>
+                    <!-- Vert Émeraude et Ambre Or -->
+                    <th class="text-center text-[#10B981] pb-3">Réf BKAM</th>
+                    <th class="text-center text-[#F59E0B] pb-3">TPE (-5%)</th>
+                </tr>
+            </thead>
+
+            <!-- Contenu dynamique -->
+            <tbody id="rates-table-body">
+                <!-- Rempli par le script -->
+            </tbody>
+        </table>
+    </main>
+
+    <!-- MODAL D'ÉDITION DES TAUX (Interface soignée et sobre) -->
+    <div id="editor-modal" class="fixed inset-0 bg-[#020408]/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#0B1120] border border-[#1E293B] w-full max-w-sm rounded-xl p-6 shadow-2xl max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-[#1E293B] pb-4 mb-4">
+                <h3 class="font-bold text-lg text-white uppercase tracking-wider">Administration Taux</h3>
+                <button id="close-editor-modal" class="text-[#64748B] hover:text-white font-bold text-xl transition-colors">&times;</button>
+            </div>
+            
+            <div class="space-y-2 mb-4">
+                <label class="block text-xs text-[#64748B] font-bold uppercase tracking-wider">Date Affichée</label>
+                <input type="text" id="edit-header-date" class="w-full bg-[#060B14] border border-[#334155] rounded px-3 py-2.5 text-sm text-white font-bold focus:border-[#D4AF37] focus:outline-none transition-colors">
+            </div>
+
+            <div id="editor-form-container" class="space-y-3 overflow-y-auto pr-2 flex-grow">
+                <!-- Rempli par le script -->
+            </div>
+
+            <div class="border-t border-[#1E293B] pt-4 mt-4 flex gap-3">
+                <button id="btn-reset-rates" class="flex-1 py-3 bg-[#1E293B] hover:bg-[#334155] text-white rounded font-bold text-xs uppercase tracking-widest transition-colors">Reset Image</button>
+                <button id="btn-save-rates" class="flex-1 py-3 bg-[#10B981] hover:bg-[#059669] text-white rounded font-bold text-xs uppercase tracking-widest shadow-lg transition-colors">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Javascript -->
+    <script>
+        const initialRatesData = [
+            { id: "EUR", unite: 1, name: "Europe", buy: 10.44, sell: 11.08, bkam: 10.71, tpe: 10.18, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#003399"/><g fill="#ffcc00" transform="translate(256,256) scale(26)"><circle r="4" fill="none"/><g id="star"><path d="m0-1.2.3.9h1l-.8.6.3.9-.8-.6-.8.6.3-.9-.8-.6h1z"/></g><use href="#star" y="-7.5"/><use href="#star" y="7.5"/><use href="#star" x="-7.5"/><use href="#star" x="7.5"/><use href="#star" x="-5.3" y="-5.3"/><use href="#star" x="5.3" y="-5.3"/><use href="#star" x="-5.3" y="5.3"/><use href="#star" x="5.3" y="5.3"/><use href="#star" x="-7.2" y="-2.3"/><use href="#star" x="7.2" y="-2.3"/><use href="#star" x="-7.2" y="2.3"/><use href="#star" x="7.2" y="2.3"/></g></svg>` },
+            { id: "USD", unite: 1, name: "Etats Unis", buy: 8.98, sell: 9.52, bkam: 9.21, tpe: 8.75, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#bb133e"/><path d="M0,39h512M0,118h512M0,196h512M0,275h512M0,354h512M0,433h512" stroke="#fff" stroke-width="39"/><rect width="205" height="275" fill="#002147"/><g fill="#fff"><g id="us-s5"><g id="us-s4"><g id="us-s3"><g id="us-s2"><g id="us-s1"><circle cx="17" cy="23" r="6"/></g><circle cx="51" cy="23" r="6"/></g><circle cx="85" cy="23" r="6"/></g><circle cx="119" cy="23" r="6"/></g><circle cx="153" cy="23" r="6"/></g><use href="#us-s5" y="46"/><use href="#us-s5" y="92"/><use href="#us-s5" y="138"/><use href="#us-s5" y="184"/><g id="us-s4-row" x="17" y="23"><use href="#us-s4" x="17" y="23"/><use href="#us-s4" x="17" y="69"/><use href="#us-s4" x="17" y="115"/><use href="#us-s4" x="17" y="161"/></g></g></svg>` },
+            { id: "CAD", unite: 1, name: "Canada", buy: 6.53, sell: 6.93, bkam: 6.70, tpe: 6.36, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#ff0000"/><rect x="128" width="256" height="512" fill="#ffffff"/><path d="M256,120 L275,180 L335,160 L310,215 L360,240 L300,265 L315,330 L275,300 L256,380 L237,300 L197,330 L212,265 L152,240 L202,215 L177,160 L237,180 Z" fill="#ff0000"/></svg>` },
+            { id: "GBP", unite: 1, name: "Angleterre", buy: 12.03, sell: 12.76, bkam: 12.31, tpe: 11.69, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#012169"/><path d="M0 0 L512 512 M0 512 L512 0" stroke="#fff" stroke-width="60"/><path d="M0 0 L512 512 M0 512 L512 0" stroke="#C8102E" stroke-width="40"/><path d="M256 0 V512 M0 256 H512" stroke="#fff" stroke-width="100"/><path d="M256 0 V512 M0 256 H512" stroke="#C8102E" stroke-width="60"/></svg>` },
+            { id: "GIP", unite: 1, name: "Gibraltar", buy: 12.03, sell: 12.76, bkam: 12.31, tpe: 11.69, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#ffffff"/><rect y="341" width="512" height="171" fill="#da0012"/><g fill="#da0012" transform="translate(196, 120)"><rect x="30" y="60" width="60" height="120"/><rect x="150" y="20" width="60" height="160"/><rect x="230" y="60" width="60" height="120"/><rect x="30" y="160" width="260" height="20"/></g></svg>` },
+            { id: "CHF", unite: 1, name: "Suisse", buy: 11.42, sell: 12.12, bkam: 11.72, tpe: 11.14, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#d52b1e"/><rect x="226" y="106" width="60" height="300" fill="#fff"/><rect x="106" y="226" width="300" height="60" fill="#fff"/></svg>` },
+            { id: "SAR", unite: 1, name: "Arabie Saou...", buy: 2.39, sell: 2.54, bkam: 2.45, tpe: 2.33, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#0b6623"/><path d="M100,280 L412,280 M150,300 L362,300 M256,260 L256,320" stroke="#fff" stroke-width="8"/><path d="M150,350 L362,350" stroke="#fff" stroke-width="4"/></svg>` },
+            { id: "KWD", unite: 1, name: "Koweit", buy: 29.04, sell: 30.81, bkam: 29.83, tpe: 28.34, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="170.6" fill="#128a41"/><rect y="170.6" width="512" height="170.6" fill="#fff"/><rect y="341.2" width="512" height="170.6" fill="#f31830"/><path d="M0 0 L150 170.6 L0 341.2 Z" fill="#000000"/></svg>` },
+            { id: "AED", unite: 1, name: "Emirats Arab...", buy: 2.44, sell: 2.59, bkam: 2.51, tpe: 2.38, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="170.6" fill="#00732f"/><rect y="170.6" width="512" height="170.6" fill="#ffffff"/><rect y="341.2" width="512" height="170.6" fill="#000000"/><rect width="128" height="512" fill="#ff0000"/></svg>` },
+            { id: "QAR", unite: 1, name: "Qatar", buy: 2.46, sell: 2.61, bkam: 2.53, tpe: 2.40, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#8a1538"/><path d="M0 0 H140 L190 28.4 L140 56.8 L190 85.2 L140 113.6 L190 142 L140 170.4 L190 198.8 L140 227.2 L190 255.6 L140 284 L190 312.4 L140 340.8 L190 369.2 L140 397.6 L190 426 L140 454.4 L190 482.8 L140 512 H0 Z" fill="#ffffff"/></svg>` },
+            { id: "BHD", unite: 1, name: "Bahrein", buy: 23.81, sell: 25.26, bkam: 24.41, tpe: 23.19, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#da121a"/><path d="M0 0 H140 L190 51.2 L140 102.4 L190 153.6 L140 204.8 L190 256 L140 307.2 L190 358.4 L140 409.6 L190 460.8 L140 512 H0 Z" fill="#ffffff"/></svg>` },
+            { id: "JPY", unite: 100, name: "Japon", buy: 5.64, sell: 5.99, bkam: 5.80, tpe: 5.51, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#ffffff"/><circle cx="256" cy="256" r="120" fill="#bc002d"/></svg>` }
+        ];
+
+        let rates = [...initialRatesData];
+
+        const tableBody = document.getElementById('rates-table-body');
+        const editorModal = document.getElementById('editor-modal');
+        const headerDate = document.getElementById('header-date');
+        const editHeaderDateInput = document.getElementById('edit-header-date');
+        
+        const btnEditRates = document.getElementById('btn-edit-rates');
+        const editorFormContainer = document.getElementById('editor-form-container');
+        const closeEditorModalBtn = document.getElementById('close-editor-modal');
+        const btnSaveRates = document.getElementById('btn-save-rates');
+        const btnResetRates = document.getElementById('btn-reset-rates');
+
+        // Formater les nombres avec la virgule à la française
+        function formatNumber(num) {
+            return num.toFixed(2).replace('.', ',');
+        }
+
+        // Rendu du tableau (hauteur 100% avec les tr qui s'équilibrent)
+        function renderTable() {
+            tableBody.innerHTML = "";
+
+            rates.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "premium-row";
+                
+                tr.innerHTML = `
+                    <!-- UNITÉ -->
+                    <td class="text-center font-bold text-[#64748B] num-font text-[clamp(14px,2vh,22px)]">
+                        ${item.unite}
+                    </td>
+                    <!-- DEVISE + DRAPEAU -->
+                    <td class="flex items-center space-x-5 pl-6 h-full py-1.5">
+                        <!-- Drapeau : Rectangle aux coins subtilement arrondis avec fine bordure -->
+                        <div class="h-[clamp(24px,4vh,38px)] w-[clamp(34px,5.5vh,54px)] rounded-[3px] overflow-hidden border border-[#334155] shadow-sm shrink-0">
+                            ${item.flag}
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <span class="font-bold text-white tracking-wide text-[clamp(14px,2.2vh,22px)] leading-tight">${item.name}</span>
+                            <span class="font-semibold text-[#64748B] tracking-widest text-[clamp(10px,1.2vh,14px)] leading-none mt-1">${item.id}</span>
+                        </div>
+                    </td>
+                    <!-- ACHAT (Rouge Rubis) -->
+                    <td class="text-center font-bold text-[#E11D48] num-font text-[clamp(18px,2.8vh,26px)]">
+                        ${formatNumber(item.buy)}
+                    </td>
+                    <!-- VENTE (Bleu Saphir) -->
+                    <td class="text-center font-bold text-[#3B82F6] num-font text-[clamp(18px,2.8vh,26px)]">
+                        ${formatNumber(item.sell)}
+                    </td>
+                    <!-- Ligne Centrale Émeraude Mâte -->
+                    <td class="p-0 relative">
+                        <div class="absolute inset-y-0 left-0 w-full emerald-divider z-10"></div>
+                    </td>
+                    <!-- REF BKAM (Vert Émeraude) -->
+                    <td class="text-center font-bold text-[#10B981] num-font text-[clamp(18px,2.8vh,26px)] bg-[#04120D]/40">
+                        ${formatNumber(item.bkam)}
+                    </td>
+                    <!-- TPE (Ambre) -->
+                    <td class="text-center font-bold text-[#F59E0B] num-font text-[clamp(18px,2.8vh,26px)] bg-[#04120D]/40">
+                        ${formatNumber(item.tpe)}
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Horloge Live
+        function updateClock() {
+            const clockEl = document.getElementById('live-clock');
+            const now = new Date();
+            clockEl.textContent = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Ouverture modale
+        btnEditRates.addEventListener('click', () => {
+            editHeaderDateInput.value = headerDate.textContent.trim();
+            editorFormContainer.innerHTML = "";
+            rates.forEach(item => {
+                const row = document.createElement('div');
+                row.className = "bg-[#060B14] p-3 rounded-lg border border-[#1E293B] space-y-3";
+                row.innerHTML = `
+                    <div class="flex items-center space-x-3 border-b border-[#1E293B] pb-2 mb-2">
+                        <div class="w-8 h-6 rounded-sm overflow-hidden shrink-0 border border-[#334155]">${item.flag}</div>
+                        <span class="font-bold text-sm text-white uppercase tracking-wider">${item.name} <span class="text-[#64748B] font-bold ml-1">${item.id}</span></span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] text-[#E11D48] font-bold uppercase tracking-widest mb-1">Achat</label>
+                            <input type="number" step="0.01" data-id="${item.id}" data-type="buy" value="${item.buy}" class="w-full bg-[#0B1120] border border-[#1E293B] rounded px-3 py-2 text-sm text-[#E11D48] text-center font-bold num-font focus:border-[#E11D48] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-[#3B82F6] font-bold uppercase tracking-widest mb-1">Vente</label>
+                            <input type="number" step="0.01" data-id="${item.id}" data-type="sell" value="${item.sell}" class="w-full bg-[#0B1120] border border-[#1E293B] rounded px-3 py-2 text-sm text-[#3B82F6] text-center font-bold num-font focus:border-[#3B82F6] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-[#10B981] font-bold uppercase tracking-widest mb-1">BKAM</label>
+                            <input type="number" step="0.01" data-id="${item.id}" data-type="bkam" value="${item.bkam}" class="w-full bg-[#0B1120] border border-[#1E293B] rounded px-3 py-2 text-sm text-[#10B981] text-center font-bold num-font focus:border-[#10B981] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-[#F59E0B] font-bold uppercase tracking-widest mb-1">TPE</label>
+                            <input type="number" step="0.01" data-id="${item.id}" data-type="tpe" value="${item.tpe}" class="w-full bg-[#0B1120] border border-[#1E293B] rounded px-3 py-2 text-sm text-[#F59E0B] text-center font-bold num-font focus:border-[#F59E0B] focus:outline-none">
+                        </div>
+                    </div>
+                `;
+                editorFormContainer.appendChild(row);
+            });
+            
+            editorModal.classList.remove('hidden');
+        });
+
+        // Fermeture modale
+        document.getElementById('close-editor-modal').addEventListener('click', () => {
+            editorModal.classList.add('hidden');
+        });
+
+        btnSaveRates.addEventListener('click', () => {
+            if (editHeaderDateInput.value.trim() !== "") {
+                headerDate.textContent = editHeaderDateInput.value.toUpperCase();
+            }
+
+            const inputs = editorFormContainer.querySelectorAll('input');
+            inputs.forEach(input => {
+                const id = input.getAttribute('data-id');
+                const type = input.getAttribute('data-type');
+                if (id && type) {
+                    const val = parseFloat(input.value) || 0;
+                    const item = rates.find(r => r.id === id);
+                    if (item) {
+                        item[type] = val;
+                    }
+                }
+            });
+            renderTable();
+            editorModal.classList.add('hidden');
+        });
+
+        btnResetRates.addEventListener('click', () => {
+            rates = JSON.parse(JSON.stringify(initialRatesData));
+            headerDate.textContent = "19 MAI 2026";
+            editorModal.classList.add('hidden');
+            renderTable();
+        });
+
+        window.onload = function() {
+            renderTable();
+        };
+    </script>
+</body>
+</html>

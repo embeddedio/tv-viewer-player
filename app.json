@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "plugins": [
+      [
+        "@react-native-tvos/config-tv",
+        {
+          "androidTVBanner": "./assets/images/icon-1920x720.png"
+        }
+      ],
+      "expo-video",
+      "expo-audio",
+      "./plugins/withAllFilesAccess.js",
+      "./plugins/withStorageModule.js"
+    ],
+    "android": {
+      "edgeToEdgeEnabled": true,
+      "package": "com.ehyoussef.tvviewer",
+      "permissions": [
+        "MANAGE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "ios": {
+      "splash": {
+        "image": "./assets/images/icon-1920x720.png"
+      },
+      "bundleIdentifier": "com.ehyoussef.tvviewer"
+    },
+    "newArchEnabled": false,
+    "name": "tv-viewer",
+    "slug": "tv-viewer",
+    "extra": {
+      "eas": {
+        "projectId": "0c3150d0-0cb6-48b7-8b81-84d05b0b74f8"
+      }
+    }
+  }
+}

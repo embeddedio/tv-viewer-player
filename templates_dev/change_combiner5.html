@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours des Billets - TV VIEDER Trading Floor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Polices: Inter pour la pureté, JetBrains Mono pour l'alignement strict des chiffres -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            overflow: hidden; /* Aucun défilement sur TV */
+            margin: 0;
+            padding: 0;
+        }
+        .num-font {
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums; /* Force l'alignement vertical parfait des chiffres */
+        }
+        /* Table qui prend 100% de la hauteur disponible */
+        .tv-table {
+            height: 100%;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+        /* Distribution égale de la hauteur pour toutes les lignes */
+        .tv-table tbody tr {
+            border-bottom: 1px solid #1f2937; /* Ligne de séparation subtile */
+        }
+        .tv-table tbody tr:nth-child(even) {
+            background-color: #09090b;
+        }
+        /* Ligne de séparation verticale stricte et lumineuse */
+        .neon-divider {
+            background: #06b6d4;
+            box-shadow: 0 0 10px #06b6d4, 0 0 20px rgba(6, 182, 212, 0.4);
+            width: 4px;
+        }
+        /* Animation subtile pour l'heure */
+        .blink {
+            animation: blinker 1s linear infinite;
+        }
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col select-none">
+
+    <!-- EN-TÊTE (Header) - 12% de la hauteur de l'écran -->
+    <header class="h-[12vh] flex items-center justify-between px-6 bg-[#0a0a0a] border-b border-gray-800 shrink-0">
+        
+        <!-- LOGO (Bouton d'édition secret) -->
+        <div id="btn-edit-rates" class="cursor-pointer flex items-center gap-3 h-full py-2 group">
+            <div class="h-full aspect-square bg-cyan-500 text-black flex items-center justify-center font-black text-3xl tracking-tighter rounded-sm group-hover:bg-cyan-400 transition-colors">
+                TV
+            </div>
+            <div class="flex flex-col justify-center">
+                <span class="text-3xl font-black tracking-widest leading-none text-white">VIEDER</span>
+                <span class="text-xs font-bold tracking-[0.2em] text-cyan-500 uppercase mt-1">Exchange Board</span>
+            </div>
+        </div>
+
+        <!-- TITRE CENTRAL -->
+        <div class="flex flex-col items-center justify-center">
+            <h1 class="text-3xl font-black tracking-widest uppercase text-white">Cours des Devises</h1>
+            <span class="text-sm font-bold tracking-[0.3em] text-gray-400 uppercase mt-1" id="header-date">19 MAI 2026</span>
+        </div>
+
+        <!-- HORLOGE EN DIRECT -->
+        <div class="flex items-center gap-3 bg-gray-900 border border-gray-800 px-5 py-3 rounded-lg">
+            <div class="w-3 h-3 rounded-full bg-red-500 blink"></div>
+            <span id="live-clock" class="text-3xl font-black num-font text-white tracking-tight">00:00:00</span>
+        </div>
+    </header>
+
+    <!-- CORPS DU TABLEAU - 88% de la hauteur de l'écran (Prend tout l'espace restant) -->
+    <main class="flex-grow h-[88vh] bg-black relative">
+        <table class="tv-table">
+            <colgroup>
+                <col class="w-[8%]">   <!-- Unité -->
+                <col class="w-[28%]">  <!-- Devises -->
+                <col class="w-[16%]">  <!-- Achat -->
+                <col class="w-[16%]">  <!-- Vente -->
+                <col class="w-[4px]">  <!-- Séparateur Cyan -->
+                <col class="w-[16%]">  <!-- Ref BKAM -->
+                <col class="w-[16%]">  <!-- TPE -->
+            </colgroup>
+
+            <thead class="bg-[#111] shrink-0 h-[10vh]">
+                <!-- Ligne 1 : Catégories -->
+                <tr>
+                    <th colspan="4" class="text-center py-2 border-b border-gray-800">
+                        <span class="text-sm font-black tracking-[0.2em] text-gray-300 uppercase">Taux de Change</span>
+                    </th>
+                    <th class="p-0 relative border-b border-gray-800"><div class="absolute inset-y-0 left-0 w-full neon-divider z-10"></div></th>
+                    <th colspan="2" class="text-center py-2 border-b border-gray-800 bg-[#0a1a14]">
+                        <span class="text-sm font-black tracking-[0.2em] text-emerald-400 uppercase">Achat par Carte (TPE)</span>
+                    </th>
+                </tr>
+                <!-- Ligne 2 : Noms des colonnes -->
+                <tr class="text-xs font-bold text-gray-500 uppercase tracking-widest border-b-2 border-gray-700">
+                    <th class="text-center">Unité</th>
+                    <th class="text-left pl-4">Devise</th>
+                    <th class="text-center text-red-500">Achat</th>
+                    <th class="text-center text-blue-500">Vente</th>
+                    <th class="p-0 relative"><div class="absolute inset-y-0 left-0 w-full neon-divider z-10"></div></th>
+                    <th class="text-center text-emerald-500">Ref BKAM</th>
+                    <th class="text-center text-orange-500">TPE (-5%)</th>
+                </tr>
+            </thead>
+
+            <!-- Contenu dynamique généré en JS (les lignes s'étireront automatiquement) -->
+            <tbody id="rates-table-body">
+            </tbody>
+        </table>
+    </main>
+
+    <!-- MODAL D'ÉDITION DES TAUX (Sombre et strict) -->
+    <div id="editor-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#0f0f11] border border-gray-800 w-full max-w-sm rounded-xl p-6 shadow-2xl max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-4">
+                <h3 class="font-black text-lg text-white uppercase tracking-wider">Administration</h3>
+                <button id="close-editor-modal" class="text-gray-500 hover:text-white font-bold text-xl">&times;</button>
+            </div>
+            
+            <div class="space-y-2 mb-4">
+                <label class="block text-xs text-gray-500 font-bold uppercase tracking-wider">Date de référence</label>
+                <input type="text" id="edit-header-date" class="w-full bg-black border border-gray-700 rounded px-3 py-2 text-sm text-white font-bold focus:border-cyan-500 focus:outline-none">
+            </div>
+
+            <div id="editor-form-container" class="space-y-3 overflow-y-auto pr-2 flex-grow">
+                <!-- Rempli par le script -->
+            </div>
+
+            <div class="border-t border-gray-800 pt-4 mt-4 flex gap-3">
+                <button id="btn-reset-rates" class="flex-1 py-3 bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white rounded font-bold text-xs uppercase tracking-wider">Reset</button>
+                <button id="btn-save-rates" class="flex-1 py-3 bg-cyan-600 hover:bg-cyan-500 text-black rounded font-black text-xs uppercase tracking-wider">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Javascript -->
+    <script>
+        const initialRatesData = [
+            { id: "EUR", unite: 1, name: "Europe", buy: 10.44, sell: 11.08, bkam: 10.71, tpe: 10.18, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#003399"/><g fill="#ffcc00" transform="translate(256,256) scale(26)"><circle r="4" fill="none"/><g id="star"><path d="m0-1.2.3.9h1l-.8.6.3.9-.8-.6-.8.6.3-.9-.8-.6h1z"/></g><use href="#star" y="-7.5"/><use href="#star" y="7.5"/><use href="#star" x="-7.5"/><use href="#star" x="7.5"/><use href="#star" x="-5.3" y="-5.3"/><use href="#star" x="5.3" y="-5.3"/><use href="#star" x="-5.3" y="5.3"/><use href="#star" x="5.3" y="5.3"/><use href="#star" x="-7.2" y="-2.3"/><use href="#star" x="7.2" y="-2.3"/><use href="#star" x="-7.2" y="2.3"/><use href="#star" x="7.2" y="2.3"/></g></svg>` },
+            { id: "USD", unite: 1, name: "Etats Unis", buy: 8.98, sell: 9.52, bkam: 9.21, tpe: 8.75, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#bb133e"/><path d="M0,39h512M0,118h512M0,196h512M0,275h512M0,354h512M0,433h512" stroke="#fff" stroke-width="39"/><rect width="205" height="275" fill="#002147"/><g fill="#fff"><g id="us-s5"><g id="us-s4"><g id="us-s3"><g id="us-s2"><g id="us-s1"><circle cx="17" cy="23" r="6"/></g><circle cx="51" cy="23" r="6"/></g><circle cx="85" cy="23" r="6"/></g><circle cx="119" cy="23" r="6"/></g><circle cx="153" cy="23" r="6"/></g><use href="#us-s5" y="46"/><use href="#us-s5" y="92"/><use href="#us-s5" y="138"/><use href="#us-s5" y="184"/><g id="us-s4-row" x="17" y="23"><use href="#us-s4" x="17" y="23"/><use href="#us-s4" x="17" y="69"/><use href="#us-s4" x="17" y="115"/><use href="#us-s4" x="17" y="161"/></g></g></svg>` },
+            { id: "CAD", unite: 1, name: "Canada", buy: 6.53, sell: 6.93, bkam: 6.70, tpe: 6.36, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#ff0000"/><rect x="128" width="256" height="512" fill="#ffffff"/><path d="M256,120 L275,180 L335,160 L310,215 L360,240 L300,265 L315,330 L275,300 L256,380 L237,300 L197,330 L212,265 L152,240 L202,215 L177,160 L237,180 Z" fill="#ff0000"/></svg>` },
+            { id: "GBP", unite: 1, name: "Angleterre", buy: 12.03, sell: 12.76, bkam: 12.31, tpe: 11.69, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#012169"/><path d="M0 0 L512 512 M0 512 L512 0" stroke="#fff" stroke-width="60"/><path d="M0 0 L512 512 M0 512 L512 0" stroke="#C8102E" stroke-width="40"/><path d="M256 0 V512 M0 256 H512" stroke="#fff" stroke-width="100"/><path d="M256 0 V512 M0 256 H512" stroke="#C8102E" stroke-width="60"/></svg>` },
+            { id: "GIP", unite: 1, name: "Gibraltar", buy: 12.03, sell: 12.76, bkam: 12.31, tpe: 11.69, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#ffffff"/><rect y="341" width="512" height="171" fill="#da0012"/><g fill="#da0012" transform="translate(196, 120)"><rect x="30" y="60" width="60" height="120"/><rect x="150" y="20" width="60" height="160"/><rect x="230" y="60" width="60" height="120"/><rect x="30" y="160" width="260" height="20"/></g></svg>` },
+            { id: "CHF", unite: 1, name: "Suisse", buy: 11.42, sell: 12.12, bkam: 11.72, tpe: 11.14, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#d52b1e"/><rect x="226" y="106" width="60" height="300" fill="#fff"/><rect x="106" y="226" width="300" height="60" fill="#fff"/></svg>` },
+            { id: "SAR", unite: 1, name: "Arabie Saou...", buy: 2.39, sell: 2.54, bkam: 2.45, tpe: 2.33, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#0b6623"/><path d="M100,280 L412,280 M150,300 L362,300 M256,260 L256,320" stroke="#fff" stroke-width="8"/><path d="M150,350 L362,350" stroke="#fff" stroke-width="4"/></svg>` },
+            { id: "KWD", unite: 1, name: "Koweit", buy: 29.04, sell: 30.81, bkam: 29.83, tpe: 28.34, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="170.6" fill="#128a41"/><rect y="170.6" width="512" height="170.6" fill="#fff"/><rect y="341.2" width="512" height="170.6" fill="#f31830"/><path d="M0 0 L150 170.6 L0 341.2 Z" fill="#000000"/></svg>` },
+            { id: "AED", unite: 1, name: "Emirats Arab...", buy: 2.44, sell: 2.59, bkam: 2.51, tpe: 2.38, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="170.6" fill="#00732f"/><rect y="170.6" width="512" height="170.6" fill="#ffffff"/><rect y="341.2" width="512" height="170.6" fill="#000000"/><rect width="128" height="512" fill="#ff0000"/></svg>` },
+            { id: "QAR", unite: 1, name: "Qatar", buy: 2.46, sell: 2.61, bkam: 2.53, tpe: 2.40, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#8a1538"/><path d="M0 0 H140 L190 28.4 L140 56.8 L190 85.2 L140 113.6 L190 142 L140 170.4 L190 198.8 L140 227.2 L190 255.6 L140 284 L190 312.4 L140 340.8 L190 369.2 L140 397.6 L190 426 L140 454.4 L190 482.8 L140 512 H0 Z" fill="#ffffff"/></svg>` },
+            { id: "BHD", unite: 1, name: "Bahrein", buy: 23.81, sell: 25.26, bkam: 24.41, tpe: 23.19, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#da121a"/><path d="M0 0 H140 L190 51.2 L140 102.4 L190 153.6 L140 204.8 L190 256 L140 307.2 L190 358.4 L140 409.6 L190 460.8 L140 512 H0 Z" fill="#ffffff"/></svg>` },
+            { id: "JPY", unite: 100, name: "Japon", buy: 5.64, sell: 5.99, bkam: 5.80, tpe: 5.51, flag: `<svg viewBox="0 0 512 512" class="w-full h-full"><rect width="512" height="512" fill="#ffffff"/><circle cx="256" cy="256" r="120" fill="#bc002d"/></svg>` }
+        ];
+
+        let rates = [...initialRatesData];
+
+        const tableBody = document.getElementById('rates-table-body');
+        const editorModal = document.getElementById('editor-modal');
+        const headerDate = document.getElementById('header-date');
+        const editHeaderDateInput = document.getElementById('edit-header-date');
+        
+        const btnEditRates = document.getElementById('btn-edit-rates');
+        const editorFormContainer = document.getElementById('editor-form-container');
+        const closeEditorModalBtn = document.getElementById('close-editor-modal');
+        const btnSaveRates = document.getElementById('btn-save-rates');
+        const btnResetRates = document.getElementById('btn-reset-rates');
+
+        function formatNumber(num) {
+            return num.toFixed(2).replace('.', ',');
+        }
+
+        // Rendu : Les hauteurs de tr vont automatiquement s'équilibrer (height 100% sur le table-body)
+        function renderTable() {
+            tableBody.innerHTML = "";
+
+            rates.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                // La hauteur de la ligne s'adapte automatiquement grâce au CSS de la table
+                
+                tr.innerHTML = `
+                    <!-- UNITÉ -->
+                    <td class="text-center font-bold text-gray-500 num-font text-[clamp(12px,2vh,20px)]">
+                        ${item.unite}
+                    </td>
+                    <!-- DEVISE + DRAPEAU -->
+                    <td class="flex items-center space-x-4 pl-4 h-full">
+                        <div class="h-[clamp(20px,4vh,35px)] aspect-[4/3] rounded-[2px] overflow-hidden border border-gray-700 shadow shrink-0">
+                            ${item.flag}
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <span class="font-black text-white uppercase tracking-wider text-[clamp(12px,2vh,20px)] leading-tight">${item.name}</span>
+                            <span class="font-bold text-gray-500 tracking-widest text-[clamp(10px,1.2vh,14px)] leading-none mt-1">${item.id}</span>
+                        </div>
+                    </td>
+                    <!-- ACHAT -->
+                    <td class="text-center font-black text-[#ff3b30] num-font text-[clamp(16px,2.5vh,24px)]">
+                        ${formatNumber(item.buy)}
+                    </td>
+                    <!-- VENTE -->
+                    <td class="text-center font-black text-[#007aff] num-font text-[clamp(16px,2.5vh,24px)]">
+                        ${formatNumber(item.sell)}
+                    </td>
+                    <!-- Ligne verticale continue cyan -->
+                    <td class="p-0 relative bg-black">
+                        <div class="absolute inset-y-0 left-0 w-full neon-divider z-10"></div>
+                    </td>
+                    <!-- REF BKAM -->
+                    <td class="text-center font-black text-[#34c759] num-font text-[clamp(16px,2.5vh,24px)] bg-[#0a1a14]">
+                        ${formatNumber(item.bkam)}
+                    </td>
+                    <!-- TPE -->
+                    <td class="text-center font-black text-[#ff9500] num-font text-[clamp(16px,2.5vh,24px)] bg-[#1a140a]">
+                        ${formatNumber(item.tpe)}
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Horloge Live
+        function updateClock() {
+            const clockEl = document.getElementById('live-clock');
+            const now = new Date();
+            clockEl.textContent = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Ouverture modale
+        btnEditRates.addEventListener('click', () => {
+            editHeaderDateInput.value = headerDate.textContent.trim();
+            editorFormContainer.innerHTML = "";
+            rates.forEach(item => {
+                const row = document.createElement('div');
+                row.className = "bg-black p-3 rounded border border-gray-800 space-y-2";
+                row.innerHTML = `
+                    <div class="flex items-center space-x-3 border-b border-gray-800 pb-2 mb-2">
+                        <div class="w-8 h-6 rounded-sm overflow-hidden shrink-0">${item.flag}</div>
+                        <span class="font-black text-sm text-white uppercase tracking-wider">${item.name} <span class="text-gray-500 font-bold ml-1">${item.id}</span></span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1">Achat (Rouge)</label>
+                            <input type="number" step="0.01" data-id="${item.id}" data-type="buy" value="${item.buy}" class="w-full bg-[#111] border border-gray-800 rounded px-2 py-2 text-sm text-red-500 text-center font-bold num-font focus:border-cyan-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1">Vente (Bleu)</label>
+                            <input type="number" step="0.01" data-id="${item.id}" data-type="sell" value="${item.sell}" class="w-full bg-[#111] border border-gray-800 rounded px-2 py-2 text-sm text-blue-500 text-center font-bold num-font focus:border-cyan-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1">BKAM (Vert)</label>
+                            <input type="number" step="0.01" data-id="${item.id}" data-type="bkam" value="${item.bkam}" class="w-full bg-[#111] border border-gray-800 rounded px-2 py-2 text-sm text-emerald-500 text-center font-bold num-font focus:border-cyan-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1">TPE (Orange)</label>
+                            <input type="number" step="0.01" data-id="${item.id}" data-type="tpe" value="${item.tpe}" class="w-full bg-[#111] border border-gray-800 rounded px-2 py-2 text-sm text-orange-500 text-center font-bold num-font focus:border-cyan-500 focus:outline-none">
+                        </div>
+                    </div>
+                `;
+                editorFormContainer.appendChild(row);
+            });
+            
+            editorModal.classList.remove('hidden');
+        });
+
+        // Fermeture modale
+        document.getElementById('close-editor-modal').addEventListener('click', () => {
+            editorModal.classList.add('hidden');
+        });
+
+        btnSaveRates.addEventListener('click', () => {
+            if (editHeaderDateInput.value.trim() !== "") {
+                headerDate.textContent = editHeaderDateInput.value.toUpperCase();
+            }
+
+            const inputs = editorFormContainer.querySelectorAll('input');
+            inputs.forEach(input => {
+                const id = input.getAttribute('data-id');
+                const type = input.getAttribute('data-type');
+                if (id && type) {
+                    const val = parseFloat(input.value) || 0;
+                    const item = rates.find(r => r.id === id);
+                    if (item) {
+                        item[type] = val;
+                    }
+                }
+            });
+            renderTable();
+            editorModal.classList.add('hidden');
+        });
+
+        btnResetRates.addEventListener('click', () => {
+            rates = JSON.parse(JSON.stringify(initialRatesData));
+            headerDate.textContent = "19 MAI 2026";
+            editorModal.classList.add('hidden');
+            renderTable();
+        });
+
+        window.onload = function() {
+            renderTable();
+        };
+    </script>
+</body>
+</html>

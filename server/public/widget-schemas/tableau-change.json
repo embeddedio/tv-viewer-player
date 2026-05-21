@@ -1,0 +1,27 @@
+{
+  "sections": [
+    {
+      "title": "Zone Header",
+      "fields": [
+        { "key": "headerWeight",    "label": "Hauteur header (lignes)", "step": 0.5, "hint": "défaut : 3.5 lignes" },
+        { "key": "logoWidthPct",    "label": "Largeur zone logo (%)",   "step": 1,   "hint": "défaut : 21%" },
+        { "key": "titleFontPx",     "label": "Taille titre (px)",       "step": 1,   "hint": "0 = auto" }
+      ]
+    },
+    {
+      "title": "En-têtes du tableau",
+      "fields": [
+        { "key": "colUnitePct",     "label": "Largeur col. Unité (%)",   "step": 1,   "hint": "défaut : 10%" },
+        { "key": "colValPct",       "label": "Largeur col. Valeurs (%)", "step": 1,   "hint": "défaut : 15%" },
+        { "key": "colHeaderFontPx", "label": "Police en-têtes (px)",     "step": 1,   "hint": "0 = auto" }
+      ]
+    },
+    {
+      "title": "Lignes de données",
+      "fields": [
+        { "key": "rowFontPx",  "label": "Police valeurs (px)",    "step": 1,   "hint": "0 = auto" },
+        { "key": "fontScale",  "label": "Échelle police globale", "step": 0.1, "hint": "0 = auto (1.0×)" }
+      ]
+    }
+  ]
+}

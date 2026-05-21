@@ -1,0 +1,22 @@
+This file tracks the project's modifications and current state.
+
+Last Update: 2025-12-18
+
+Changes:
+- **Native Android Configuration**:
+  - **Launch on Boot**: Added `RECEIVE_BOOT_COMPLETED` permission and a `BootReceiver` class to start `MainActivity` when the Android system boots.
+  - **Auto-Restart on Crash**: Added a global `UncaughtExceptionHandler` in `MainApplication.kt`. Upon a crash, it schedules a restart of `MainActivity` after 2 seconds using `AlarmManager`.
+- **Video Player**:
+  - Switched from `expo-video` to `expo-av` in `components/VideoViewWrapper.tsx` to fix rotation issues on Android TV (uses `TextureView`).
+  - Removed `expo-screen-orientation` dependency.
+- **Global Rotation**: `App.tsx` manages global rotation state.
+
+Project Structure:
+- App.tsx: Main entry point.
+- components/VideoViewWrapper.tsx: Handles video playback using `expo-av`.
+- android/app/src/main/java/com/ehyoussef/tvviewer/BootReceiver.kt: Native receiver for boot events.
+- android/app/src/main/java/com/ehyoussef/tvviewer/MainApplication.kt: Application entry point with crash handler.
+
+Notes:
+- The project uses `legacy-peer-deps` for npm.
+- Android TV rotation relies on `TextureView` respecting parent transforms.

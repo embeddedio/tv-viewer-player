@@ -1,0 +1,94 @@
+[
+  {
+    "id": "seq-1772629707564-8281",
+    "name": "test1",
+    "priority": 10,
+    "scheduleType": "continue",
+    "startDate": "",
+    "endDate": "",
+    "startTime": "",
+    "endTime": "",
+    "days": [],
+    "loopDurationSec": 20,
+    "loopOrder": 0,
+    "layoutId": "fullscreen",
+    "customLayout": null,
+    "zones": {
+      "zone1": {
+        "type": "playlist",
+        "items": [
+          {
+            "widgetType": "tableau-change",
+            "duration": 10
+          }
+        ]
+      },
+      "audio": {
+        "type": "playlist",
+        "items": []
+      }
+    },
+    "createdAt": 1772629707564,
+    "updatedAt": 1772639252281
+  },
+  {
+    "id": "seq-1772630018856-500868",
+    "name": "test2",
+    "priority": 10,
+    "scheduleType": "continue",
+    "startDate": "",
+    "endDate": "",
+    "startTime": "",
+    "endTime": "",
+    "days": [],
+    "loopDurationSec": 10,
+    "loopOrder": 0,
+    "layoutId": "two-columns",
+    "customLayout": {
+      "direction": "row",
+      "flex": 1,
+      "children": [
+        {
+          "id": "zone1",
+          "flex": 0.6
+        },
+        {
+          "id": "zone2",
+          "flex": 1.4
+        }
+      ]
+    },
+    "zones": {
+      "zone1": {
+        "type": "playlist",
+        "items": [
+          {
+            "mediaName": "media-1772629972586-461859596.png",
+            "originalName": "med_fr.png",
+            "duration": 5
+          },
+          {
+            "mediaName": "media-1772629972630-653213599.png",
+            "originalName": "logo-medchange (3).png",
+            "duration": 5
+          }
+        ]
+      },
+      "audio": {
+        "type": "playlist",
+        "items": []
+      },
+      "zone2": {
+        "type": "playlist",
+        "items": [
+          {
+            "widgetType": "tableau-change",
+            "duration": 10
+          }
+        ]
+      }
+    },
+    "createdAt": 1772630018856,
+    "updatedAt": 1772630018856
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "rates": [
+    { "code": "USD", "label": "Dollar Americain", "unit": "1", "bkamReference": "9,9200", "bkamTpe": "9,4240", "icon": "" },
+    { "code": "EUR", "label": "Euro", "unit": "1", "bkamReference": "10,8350", "bkamTpe": "10,2933", "icon": "" },
+    { "code": "GBP", "label": "Livre Sterling", "unit": "1", "bkamReference": "12,6500", "bkamTpe": "12,0175", "icon": "" },
+    { "code": "CHF", "label": "Franc Suisse", "unit": "1", "bkamReference": "11,3200", "bkamTpe": "10,7540", "icon": "" },
+    { "code": "CAD", "label": "Dollar Canadien", "unit": "1", "bkamReference": "7,2500", "bkamTpe": "6,8875", "icon": "" },
+    { "code": "SAR", "label": "Riyal Saoudien", "unit": "1", "bkamReference": "2,6450", "bkamTpe": "2,5128", "icon": "" },
+    { "code": "AED", "label": "Dirham Emirien", "unit": "1", "bkamReference": "2,7020", "bkamTpe": "2,5669", "icon": "" },
+    { "code": "KWD", "label": "Dinar Koweitien", "unit": "1", "bkamReference": "32,3100", "bkamTpe": "30,6945", "icon": "" },
+    { "code": "QAR", "label": "Riyal Qatari", "unit": "1", "bkamReference": "2,7250", "bkamTpe": "2,5888", "icon": "" },
+    { "code": "BHD", "label": "Dinar Bahreinien", "unit": "1", "bkamReference": "26,3200", "bkamTpe": "25,0040", "icon": "" },
+    { "code": "JPY", "label": "Yen Japonais", "unit": "100", "bkamReference": "6,6400", "bkamTpe": "6,3080", "icon": "" },
+    { "code": "DKK", "label": "Couronne Danoise", "unit": "1", "bkamReference": "1,4520", "bkamTpe": "1,3794", "icon": "" },
+    { "code": "SEK", "label": "Couronne Suedoise", "unit": "1", "bkamReference": "1,0050", "bkamTpe": "0,9548", "icon": "" },
+    { "code": "NOK", "label": "Couronne Norvegienne", "unit": "1", "bkamReference": "0,9650", "bkamTpe": "0,9168", "icon": "" }
+  ],
+  "updatedAt": "2026-04-06T10:30:00.000Z",
+  "stale": false
+}
