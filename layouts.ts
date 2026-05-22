@@ -69,6 +69,7 @@ export interface ZoneWidgetItem {
   widgetType: string;
   duration: number;
   variant?: 'simple' | 'bkam' | 'combined';
+  theme?: string;
   messages?: string[];
   direction?: 'ltr' | 'rtl';
   fontSize?: number;

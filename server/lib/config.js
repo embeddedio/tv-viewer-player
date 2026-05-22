@@ -284,6 +284,7 @@ const getAppConfigAsync = async () => {
   return {
     orientation: sanitizeOrientation(raw.orientation),
     ticker: sanitizeTicker(raw.ticker),
+    widgetStyles: raw.widgetStyles || {},
   };
 };
 
@@ -304,8 +305,9 @@ const writeConfigAsync = async (partial = {}) => {
     const current = {
        orientation: sanitizeOrientation(currentRaw.orientation),
        ticker: sanitizeTicker(currentRaw.ticker),
+       widgetStyles: currentRaw.widgetStyles || {},
     };
-    
+
     const next = { ...current };
 
     if (Object.prototype.hasOwnProperty.call(partial, 'orientation')) {
@@ -348,6 +350,10 @@ const writeConfigAsync = async (partial = {}) => {
           next.ticker.items = sanitized.items;
         }
       }
+    }
+
+    if (Object.prototype.hasOwnProperty.call(partial, 'widgetStyles')) {
+      next.widgetStyles = partial.widgetStyles;
     }
 
     const written = JSON.stringify(next, null, 2);

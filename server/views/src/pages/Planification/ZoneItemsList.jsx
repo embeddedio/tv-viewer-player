@@ -69,7 +69,7 @@ export default function ZoneItemsList({ seq, selectedZoneId, isAudioZone, onSave
   useEffect(() => {
     const handler = (e) => {
       if (e.data?.type === 'widget-sidebar-save' && editingSidebarIdx !== null) {
-        handleUpdateItem(editingSidebarIdx, { variant: e.data.variant });
+        handleUpdateItem(editingSidebarIdx, { variant: e.data.variant, theme: e.data.theme });
       }
       if (e.data?.type === 'widget-settings-close') closeSidebar();
     };
@@ -83,7 +83,7 @@ export default function ZoneItemsList({ seq, selectedZoneId, isAudioZone, onSave
     const manifest = allWidgets.find(w => w.type === item.widgetType);
     const sidebarPage = manifest?.settingsPages?.item;
     if (!sidebarPage) return;
-    const params = new URLSearchParams({ variant: item.variant || 'simple' });
+    const params = new URLSearchParams({ variant: item.variant || 'simple', theme: item.theme || 'default' });
     setSidebarUrl(`${sidebarPage}?${params}`);
     setEditingSidebarIdx(idx);
   }, [items, allWidgets]);

@@ -12,6 +12,7 @@ interface WidgetWebViewProps {
 function WidgetWebView({ baseUrl, widgetType, widgetItem }: WidgetWebViewProps) {
   const params = new URLSearchParams();
   if (widgetItem?.variant)     params.set('variant',     widgetItem.variant);
+  if (widgetItem?.theme)       params.set('theme',       widgetItem.theme);
   if (widgetItem?.fontScale)   params.set('fontScale',   String(widgetItem.fontScale));
   if (widgetItem?.logoSize)    params.set('logoSize',    String(widgetItem.logoSize));
   if (widgetItem?.headerWeight) params.set('headerWeight', String(widgetItem.headerWeight));

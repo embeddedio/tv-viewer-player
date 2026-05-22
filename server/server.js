@@ -409,6 +409,8 @@ const server = http.createServer(async (req, res) => {
         // App-facing setters sans auth
       } else if (req.method === 'GET' && (pathname === '/files' || pathname === '/logo/info')) {
         // lecture seule autorisée
+      } else if (req.method === 'GET' && pathname.match(/^\/api\/widgets\/[^\/]+\/style$/)) {
+        // Style widget public — lu par le WebView du widget (pas de cookie de session)
       } else {
         return sendJson(res, { message: 'Non authentifié' }, 401);
       }
