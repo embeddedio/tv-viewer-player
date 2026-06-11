@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Messages — Marquee</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #152238; --navy-hover: #1e3a5f; --accent: #0ea5e9;
+      --border: #e5e7eb; --text: #1f2937; --text-dim: #6b7280;
+      --bg: #f9fafb; --bg-hover: #f3f4f6;
+    }
+    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: var(--text); background: #fff; overflow: hidden; }
+    #app { display: flex; flex-direction: column; height: 100%; }
+
+    #header {
+      background: var(--navy); padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    #header h1 { color: #fff; font-size: 0.95rem; font-weight: 700; }
+    #header p  { color: rgba(255,255,255,0.45); font-size: 0.65rem; margin-top: 3px; }
+    #close-btn {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.6); font-size: 1.3rem; line-height: 1;
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #close-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+    #body { flex: 1; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; background: var(--bg); overflow-y: auto; }
+
+    .section-label {
+      font-size: 0.62rem; font-weight: 800; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .field-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+    .field-row label { font-size: 0.78rem; font-weight: 600; color: var(--text); }
+    .field-row input, .field-row select {
+      padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px;
+      font-size: 0.84rem; color: var(--text); background: #fff; outline: none;
+    }
+    .field-row input:focus, .field-row select:focus { border-color: var(--accent); }
+
+    /* Messages list */
+    #msg-list { display: flex; flex-direction: column; gap: 6px; }
+    .msg-row {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .msg-row input {
+      flex: 1; padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px;
+      font-size: 0.84rem; color: var(--text); background: #fff; outline: none;
+    }
+    .msg-row input:focus { border-color: var(--accent); }
+    .msg-row button {
+      width: 28px; height: 28px; border: none; border-radius: 50%;
+      background: #fee2e2; color: #dc2626; cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .msg-row button:hover { background: #fecaca; }
+
+    #add-btn {
+      align-self: flex-start; padding: 6px 14px;
+      background: var(--navy); color: #fff;
+      border: none; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; transition: background .15s;
+    }
+    #add-btn:hover { background: var(--navy-hover); }
+
+    #footer {
+      padding: 14px 24px; border-top: 1px solid var(--border);
+      display: flex; justify-content: flex-end; gap: 10px; background: #fff; flex-shrink: 0;
+    }
+    #cancel-btn {
+      padding: 8px 18px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; font-size: 0.84rem; cursor: pointer; color: var(--text); font-weight: 600;
+    }
+    #save-btn {
+      padding: 8px 20px; background: var(--accent); color: #fff;
+      border: none; border-radius: 6px; font-size: 0.84rem; font-weight: 700; cursor: pointer;
+    }
+    #save-btn:hover { opacity: .9; }
+    #status { font-size: 0.75rem; color: #059669; align-self: center; min-width: 80px; text-align: right; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <div>
+      <h1>📢 Message Défilant</h1>
+      <p>Configuration des messages</p>
+    </div>
+    <button id="close-btn" title="Fermer">✕</button>
+  </div>
+
+  <div id="body">
+    <div>
+      <div class="section-label">Messages</div>
+      <div id="msg-list"></div>
+      <button id="add-btn">+ Ajouter un message</button>
+    </div>
+
+    <div>
+      <div class="section-label">Apparence</div>
+      <div class="field-row">
+        <label>Direction</label>
+        <select id="direction">
+          <option value="ltr">Gauche → Droite (LTR)</option>
+          <option value="rtl">Droite → Gauche (RTL)</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <label>Taille du texte (px)</label>
+        <input type="number" id="fontSize" min="10" max="120" step="1" value="28">
+      </div>
+      <div class="field-row">
+        <label>Vitesse (×)</label>
+        <input type="number" id="speed" min="0.1" max="5" step="0.1" value="1">
+      </div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <span id="status"></span>
+    <button id="cancel-btn">Annuler</button>
+    <button id="save-btn">Enregistrer</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  const msgList  = document.getElementById('msg-list');
+  const addBtn   = document.getElementById('add-btn');
+  const saveBtn  = document.getElementById('save-btn');
+  const cancelBtn= document.getElementById('cancel-btn');
+  const closeBtn = document.getElementById('close-btn');
+  const status   = document.getElementById('status');
+
+  function addRow(value) {
+    const row = document.createElement('div');
+    row.className = 'msg-row';
+    const inp = document.createElement('input');
+    inp.type = 'text'; inp.placeholder = 'Votre message…'; inp.value = value || '';
+    const del = document.createElement('button');
+    del.title = 'Supprimer'; del.textContent = '×';
+    del.onclick = function() { row.remove(); };
+    row.appendChild(inp); row.appendChild(del);
+    msgList.appendChild(inp.focus ? (msgList.appendChild(row), row) : row);
+    return row;
+  }
+
+  function getMessages() {
+    return Array.from(msgList.querySelectorAll('input')).map(i => i.value.trim()).filter(Boolean);
+  }
+
+  // Load current config
+  fetch('/api/widgets/message-marquee')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      (data.messages || []).forEach(function(m) { addRow(m); });
+      if (data.direction) document.getElementById('direction').value = data.direction;
+      if (data.fontSize)  document.getElementById('fontSize').value  = data.fontSize;
+      if (data.speed)     document.getElementById('speed').value     = data.speed;
+    })
+    .catch(function() {});
+
+  addBtn.onclick = function() {
+    var row = document.createElement('div');
+    row.className = 'msg-row';
+    var inp = document.createElement('input');
+    inp.type = 'text'; inp.placeholder = 'Votre message…';
+    var del = document.createElement('button');
+    del.title = 'Supprimer'; del.textContent = '×';
+    del.onclick = function() { row.remove(); };
+    row.appendChild(inp); row.appendChild(del);
+    msgList.appendChild(row);
+    inp.focus();
+  };
+
+  saveBtn.onclick = function() {
+    const messages  = getMessages();
+    const direction = document.getElementById('direction').value;
+    const fontSize  = parseFloat(document.getElementById('fontSize').value) || 28;
+    const speed     = parseFloat(document.getElementById('speed').value)    || 1;
+
+    fetch('/api/widgets/message-marquee', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages, direction, fontSize, speed }),
+    })
+    .then(function(r) { return r.json(); })
+    .then(function() {
+      status.textContent = '✓ Enregistré';
+      setTimeout(function() { status.textContent = ''; }, 2000);
+    })
+    .catch(function() { status.textContent = '✗ Erreur'; });
+  };
+
+  function close() {
+    window.parent.postMessage({ type: 'widget-settings-close' }, '*');
+  }
+  cancelBtn.onclick = close;
+  closeBtn.onclick  = close;
+})();
+</script>
+</body>
+</html>

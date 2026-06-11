@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Widget Météo</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%; overflow: hidden; background: #000;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+#weather-widget { width: 100%; height: 100%; }
+
+.wx-status {
+  position: absolute; inset: 0; display: flex; align-items: center;
+  justify-content: center; color: #64748b;
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px; letter-spacing: 0.04em; padding: 20px; text-align: center;
+}
+
+.wx {
+  container-type: size; container-name: wx;
+  width: 100%; height: 100%; border-radius: 0;
+  position: relative; overflow: hidden;
+  font-variant-numeric: tabular-nums;
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.wx-icon {
+  width: 1em; height: 1em; display: inline-block; vertical-align: -0.15em;
+  fill: none; stroke: currentColor; stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+}
+
+/* THÈME DARK */
+.wx[data-theme="stratum-dark"] {
+  --st-bg:           linear-gradient(180deg, #0e1217 0%, #0a0d11 100%);
+  --st-glow:         radial-gradient(ellipse at top, rgba(253, 224, 71, 0.05) 0%, transparent 50%);
+  --st-fg:           #ffffff;
+  --st-fg-1:         #e5e7eb;
+  --st-fg-2:         #94a3b8;
+  --st-fg-3:         #64748b;
+  --st-fg-4:         #475569;
+  --st-card-bg:      rgba(255,255,255,0.02);
+  --st-card-border:  rgba(255,255,255,0.06);
+  --st-divider:      rgba(255,255,255,0.06);
+  --st-gauge-track:  rgba(255,255,255,0.08);
+  --st-accent:       #fde047;
+  --st-live:         #5eead4;
+  --st-marker-max:   #fde047;
+  --st-marker-min:   #5eead4;
+  --st-bar-grad:     linear-gradient(180deg, #f97316 0%, #fde047 50%, #5eead4 100%);
+  --st-gauge-grad:   linear-gradient(90deg, #5eead4 0%, #06b6d4 100%);
+  --st-shadow:       none;
+  --st-icon-glow:    drop-shadow(0 0 14px rgba(253, 224, 71, 0.4));
+}
+
+/* THÈME LIGHT */
+.wx[data-theme="stratum-light"] {
+  --st-bg:           linear-gradient(180deg, #ffffff 0%, #f5f7fa 100%);
+  --st-glow:         radial-gradient(ellipse at top, rgba(245, 158, 11, 0.06) 0%, transparent 50%);
+  --st-fg:           #0f172a;
+  --st-fg-1:         #1e293b;
+  --st-fg-2:         #475569;
+  --st-fg-3:         #64748b;
+  --st-fg-4:         #94a3b8;
+  --st-card-bg:      #ffffff;
+  --st-card-border:  #e5e7eb;
+  --st-divider:      #e5e7eb;
+  --st-gauge-track:  #e5e7eb;
+  --st-accent:       #f59e0b;
+  --st-live:         #10b981;
+  --st-marker-max:   #f59e0b;
+  --st-marker-min:   #0891b2;
+  --st-bar-grad:     linear-gradient(180deg, #ef4444 0%, #f59e0b 50%, #0891b2 100%);
+  --st-gauge-grad:   linear-gradient(90deg, #06b6d4 0%, #0891b2 100%);
+  --st-shadow:       0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.03);
+  --st-icon-glow:    drop-shadow(0 2px 8px rgba(245, 158, 11, 0.25));
+}
+
+.wx[data-theme^="stratum"] {
+  background: var(--st-glow), var(--st-bg);
+  color: var(--st-fg-1);
+  padding: clamp(10px, min(2.5cqi, 4cqb), 22px);
+}
+.wx[data-theme^="stratum"] .st-shell {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  gap: clamp(6px, min(1.5cqi, 2.5cqb), 14px);
+  min-height: 0;
+}
+
+/* Top bar */
+.wx[data-theme^="stratum"] .st-bar {
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: clamp(9px, 2.1cqi, 11px);
+  padding-bottom: clamp(6px, 1.3cqi, 10px);
+  border-bottom: 1px solid var(--st-divider); min-width: 0;
+}
+.wx[data-theme^="stratum"] .st-id { display: flex; align-items: baseline; gap: 6px; min-width: 0; overflow: hidden; }
+.wx[data-theme^="stratum"] .st-id-city {
+  font-size: clamp(12px, 3cqi, 16px); font-weight: 700; letter-spacing: -0.01em;
+  color: var(--st-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.wx[data-theme^="stratum"] .st-id-loc { color: var(--st-fg-3); font-weight: 500; flex-shrink: 0; }
+.wx[data-theme^="stratum"] .st-stamp {
+  display: flex; align-items: center; gap: clamp(6px, 1.3cqi, 12px);
+  color: var(--st-fg-3); flex-shrink: 0; white-space: nowrap;
+}
+.wx[data-theme^="stratum"] .st-live {
+  display: flex; align-items: center; gap: 5px;
+  color: var(--st-live); font-weight: 600; letter-spacing: 0.08em;
+}
+.wx[data-theme^="stratum"] .st-live::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--st-live); box-shadow: 0 0 8px currentColor;
+  animation: st-pulse 2s ease-in-out infinite;
+}
+@keyframes st-pulse { 50% { opacity: 0.3; } }
+
+/* Hero */
+.wx[data-theme^="stratum"] .st-hero {
+  display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: clamp(12px, 2.5cqi, 24px); align-items: stretch; min-height: 0; min-width: 0;
+}
+.wx[data-theme^="stratum"] .st-temp-block {
+  display: flex; flex-direction: column; justify-content: center;
+  gap: clamp(2px, 0.5cqi, 4px); min-width: 0; overflow: hidden;
+}
+.wx[data-theme^="stratum"] .st-icon-temp {
+  display: flex; align-items: center; gap: clamp(6px, 1.4cqi, 12px); min-width: 0;
+}
+.wx[data-theme^="stratum"] .st-icon {
+  font-size: clamp(24px, min(7cqi, 13cqb), 46px);
+  color: var(--st-accent); filter: var(--st-icon-glow); line-height: 0; flex-shrink: 0;
+}
+.wx[data-theme="stratum-dark"] .st-icon[data-cond="clear-night"],
+.wx[data-theme="stratum-dark"] .st-icon[data-cond="partly-cloudy-night"] {
+  color: #e0e7ff; filter: drop-shadow(0 0 14px rgba(224, 231, 255, 0.35));
+}
+.wx[data-theme="stratum-light"] .st-icon[data-cond="clear-night"],
+.wx[data-theme="stratum-light"] .st-icon[data-cond="partly-cloudy-night"] {
+  color: #475569; filter: drop-shadow(0 2px 6px rgba(71, 85, 105, 0.2));
+}
+.wx[data-theme^="stratum"] .st-temp {
+  font-size: clamp(36px, min(13cqi, 22cqb), 84px); font-weight: 200;
+  line-height: 0.95; letter-spacing: -0.04em; color: var(--st-fg);
+  white-space: nowrap; overflow: hidden;
+}
+.wx[data-theme^="stratum"] .st-temp .deg {
+  font-size: 0.38em; color: var(--st-accent); font-weight: 300;
+  vertical-align: 0.55em; margin-left: 0.05em;
+}
+.wx[data-theme^="stratum"] .st-cond {
+  font-size: clamp(11px, 2.5cqi, 14px); font-weight: 500; color: var(--st-fg-1);
+  line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;
+}
+.wx[data-theme^="stratum"] .st-cond-sub {
+  display: flex; flex-wrap: wrap; gap: 2px 10px;
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: clamp(8px, 1.9cqi, 11px); color: var(--st-fg-3);
+  letter-spacing: 0.04em; margin-top: 4px; min-width: 0; line-height: 1.4;
+}
+.wx[data-theme^="stratum"] .st-cond-sub > span { white-space: nowrap; }
+
+/* Chart 24h */
+.wx[data-theme^="stratum"] .st-chart {
+  display: flex; flex-direction: column; gap: clamp(4px, 1cqi, 8px);
+  background: var(--st-card-bg); border: 1px solid var(--st-card-border);
+  border-radius: 10px; padding: clamp(8px, 1.6cqi, 14px);
+  box-shadow: var(--st-shadow); min-width: 0; min-height: 0; overflow: hidden;
+}
+.wx[data-theme^="stratum"] .st-chart-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  flex-wrap: wrap; gap: 4px 8px;
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: clamp(8px, 1.8cqi, 10px); color: var(--st-fg-3);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.wx[data-theme^="stratum"] .st-chart-head b { color: var(--st-accent); font-weight: 700; }
+.wx[data-theme^="stratum"] .st-chart-head .st-chart-stats { white-space: nowrap; flex-shrink: 0; }
+.wx[data-theme^="stratum"] .st-chart-svg {
+  width: 100%; flex: 1; min-height: 0; display: block; color: var(--st-accent);
+}
+.wx[data-theme^="stratum"] .st-chart-axis {
+  display: flex; justify-content: space-between;
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: clamp(8px, 1.7cqi, 10px); color: var(--st-fg-4); letter-spacing: 0.04em;
+}
+
+/* Métriques */
+.wx[data-theme^="stratum"] .st-metrics {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(6px, 1.3cqi, 12px); min-width: 0;
+}
+.wx[data-theme^="stratum"] .st-metric {
+  position: relative; background: var(--st-card-bg);
+  border: 1px solid var(--st-card-border); border-radius: 10px;
+  padding: clamp(7px, 1.5cqi, 12px); box-shadow: var(--st-shadow);
+  display: flex; flex-direction: column; gap: 3px; min-width: 0; overflow: hidden;
+}
+.wx[data-theme^="stratum"] .st-metric-label {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: clamp(8px, 1.8cqi, 10px); color: var(--st-fg-3);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+}
+.wx[data-theme^="stratum"] .st-metric-label svg { font-size: 1.1em; color: var(--st-accent); flex-shrink: 0; }
+.wx[data-theme^="stratum"] .st-metric-val {
+  font-size: clamp(12px, min(2.8cqi, 5cqb), 18px); font-weight: 700;
+  color: var(--st-fg); line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.wx[data-theme^="stratum"] .st-metric-val .unit {
+  font-size: 0.6em; color: var(--st-fg-3); font-weight: 500; margin-left: 3px;
+}
+.wx[data-theme^="stratum"] .st-metric-sub {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: clamp(8px, 1.8cqi, 10px); color: var(--st-fg-2);
+  letter-spacing: 0.04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.wx[data-theme^="stratum"] .st-metric--wind { padding-right: clamp(28px, 7cqi, 44px); }
+.wx[data-theme^="stratum"] .st-compass-svg {
+  position: absolute; top: clamp(6px, 1.3cqi, 10px); right: clamp(6px, 1.3cqi, 10px);
+  width: clamp(18px, 4cqi, 26px); height: clamp(18px, 4cqi, 26px); color: var(--st-accent);
+}
+.wx[data-theme^="stratum"] .st-gauge {
+  width: 100%; height: 4px; background: var(--st-gauge-track);
+  border-radius: 999px; overflow: hidden; margin-top: 2px;
+}
+.wx[data-theme^="stratum"] .st-gauge-fill {
+  height: 100%; background: var(--st-gauge-grad); border-radius: 999px; transition: width 0.6s;
+}
+
+/* Forecast 7 jours */
+.wx[data-theme^="stratum"] .st-forecast {
+  background: var(--st-card-bg); border: 1px solid var(--st-card-border);
+  border-radius: 10px; padding: clamp(8px, 1.6cqi, 14px);
+  box-shadow: var(--st-shadow); min-height: 0; min-width: 0; overflow: hidden;
+}
+.wx[data-theme^="stratum"] .st-forecast-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  flex-wrap: wrap; gap: 4px 8px;
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: clamp(8px, 1.8cqi, 10px); color: var(--st-fg-3);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: clamp(6px, 1.3cqi, 10px); white-space: nowrap;
+}
+.wx[data-theme^="stratum"] .st-forecast-head b { color: var(--st-accent); font-weight: 700; }
+.wx[data-theme^="stratum"] .st-forecast-grid {
+  display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: clamp(4px, 0.9cqi, 8px);
+}
+.wx[data-theme^="stratum"] .st-day {
+  display: grid; grid-template-rows: auto auto minmax(20px, 1fr) auto;
+  gap: clamp(3px, 0.6cqi, 5px); align-items: center; justify-items: center;
+  min-width: 0; text-align: center; overflow: hidden;
+}
+.wx[data-theme^="stratum"] .st-day-name {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: clamp(8px, 1.8cqi, 10px); color: var(--st-fg-3); letter-spacing: 0.08em; font-weight: 600;
+}
+.wx[data-theme^="stratum"] .st-day-icon { font-size: clamp(13px, 3cqi, 18px); color: var(--st-fg-2); line-height: 0; }
+.wx[data-theme^="stratum"] .st-day.today .st-day-name { color: var(--st-accent); }
+.wx[data-theme^="stratum"] .st-day.today .st-day-icon { color: var(--st-accent); }
+.wx[data-theme^="stratum"] .st-day-bar {
+  position: relative; height: clamp(24px, 5.5cqi, 44px); width: 4px;
+  background: var(--st-gauge-track); border-radius: 999px;
+}
+.wx[data-theme^="stratum"] .st-day-bar-fill {
+  position: absolute; left: 0; right: 0; background: var(--st-bar-grad); border-radius: 999px;
+}
+.wx[data-theme^="stratum"] .st-day-temps {
+  display: flex; flex-direction: column; gap: 1px;
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: clamp(9px, 2cqi, 11px); line-height: 1.1;
+}
+.wx[data-theme^="stratum"] .st-day-hi { color: var(--st-fg); font-weight: 700; }
+.wx[data-theme^="stratum"] .st-day-lo { color: var(--st-fg-3); }
+
+/* Responsive (container queries) */
+@container wx (max-width: 520px) { .wx[data-theme^="stratum"] .st-chart-head .st-chart-stats { display: none; } }
+@container wx (max-width: 540px) { .wx[data-theme^="stratum"] .st-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@container wx (max-width: 460px),
+@container wx (max-height: 340px) {
+  .wx[data-theme^="stratum"] .st-chart { display: none; }
+  .wx[data-theme^="stratum"] .st-hero { grid-template-columns: minmax(0, 1fr); }
+}
+@container wx (max-width: 380px) { .wx[data-theme^="stratum"] .st-metrics .st-metric:nth-child(n+3) { display: none; } }
+@container wx (max-height: 320px) { .wx[data-theme^="stratum"] .st-metrics { display: none; } }
+@container wx (max-width: 460px) {
+  .wx[data-theme^="stratum"] .st-forecast-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .wx[data-theme^="stratum"] .st-day:nth-child(n+6) { display: none; }
+}
+@container wx (max-width: 340px) {
+  .wx[data-theme^="stratum"] .st-forecast-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .wx[data-theme^="stratum"] .st-day:nth-child(n+5) { display: none; }
+}
+@container wx (max-width: 240px) {
+  .wx[data-theme^="stratum"] .st-forecast-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .wx[data-theme^="stratum"] .st-day:nth-child(n+4) { display: none; }
+  .wx[data-theme^="stratum"] .st-stamp { display: none; }
+  .wx[data-theme^="stratum"] .st-cond-sub { display: none; }
+}
+@container wx (max-width: 420px) { .wx[data-theme^="stratum"] .st-forecast-head .st-forecast-stats { display: none; } }
+@container wx (max-height: 220px) { .wx[data-theme^="stratum"] .st-forecast { display: none; } }
+@container wx (max-height: 280px) { .wx[data-theme^="stratum"] .st-day-bar { height: clamp(16px, 4cqi, 28px); } }
+</style>
+</head>
+<body>
+
+<div id="weather-widget" class="wx" data-theme="stratum-dark">
+  <div class="wx-status">Chargement de la météo...</div>
+</div>
+
+<script>
+"use strict";
+
+/* Config : lue depuis URL params (city + theme injectés par le composant RN) */
+var _p = new URLSearchParams(window.location.search);
+var CONFIG = {
+  city:                   _p.get('city')  || 'Tanger',
+  theme:                  _p.get('theme') || 'stratum-dark',
+  refreshIntervalMinutes: 60,
+  language:               'fr',
+  targetSelector:         '#weather-widget',
+  debug:                  false
+};
+
+/* Mapping codes WMO → condition widget */
+var WMO_CONDITION = function(code, isDay) {
+  if (isDay === undefined) isDay = 1;
+  if (code <= 1)  return isDay ? 'sunny' : 'clear-night';
+  if (code === 2) return isDay ? 'partly-cloudy' : 'partly-cloudy-night';
+  if (code === 3 || code === 45 || code === 48) return 'cloudy';
+  if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return 'rainy';
+  if ((code >= 71 && code <= 77) || code === 85 || code === 86) return 'snowy';
+  if (code >= 95) return 'thunder';
+  return 'cloudy';
+};
+
+var WMO_DESC = {
+  0:'Ciel dégagé',1:'Principalement clair',2:'Partiellement nuageux',3:'Couvert',
+  45:'Brouillard',48:'Brouillard givrant',
+  51:'Bruine légère',53:'Bruine modérée',55:'Bruine dense',
+  56:'Bruine verglaçante',57:'Bruine verglaçante forte',
+  61:'Pluie faible',63:'Pluie modérée',65:'Pluie forte',
+  66:'Pluie verglaçante',67:'Pluie verglaçante forte',
+  71:'Neige faible',73:'Neige modérée',75:'Neige forte',77:'Grains de neige',
+  80:'Averses faibles',81:'Averses modérées',82:'Averses fortes',
+  85:'Averses de neige',86:'Averses de neige fortes',
+  95:'Orage',96:'Orage + grêle',99:'Orage + forte grêle'
+};
+
+var WIND_DIRS = ['N','NE','E','SE','S','SO','O','NO'];
+var dirFromDeg = function(d) { return WIND_DIRS[Math.round(d / 45) % 8]; };
+
+var ICON_MAP = {
+  'sunny':'i-sun','cloudy':'i-cloud','partly-cloudy':'i-partly',
+  'rainy':'i-rain','snowy':'i-snow','thunder':'i-thunder',
+  'clear-night':'i-moon','partly-cloudy-night':'i-moon-cloud'
+};
+
+var iconSvg = function(cond) {
+  return '<svg class="wx-icon"><use href="#' + (ICON_MAP[cond] || 'i-sun') + '"/></svg>';
+};
+var iconWind = function() { return '<svg class="wx-icon"><use href="#i-wind"/></svg>'; };
+var iconDrop = function() { return '<svg class="wx-icon"><use href="#i-drop"/></svg>'; };
+
+var dateLong = function(iso, lang) {
+  return new Date(iso).toLocaleDateString(lang || 'fr', { weekday:'long', day:'numeric', month:'long' });
+};
+var dateShortFmt = function(iso) {
+  var d = new Date(iso);
+  return ('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();
+};
+var dayShort = function(iso, lang) {
+  return new Date(iso).toLocaleDateString(lang || 'fr', { weekday:'short' }).replace('.','').toUpperCase().slice(0,3);
+};
+
+/* Open-Meteo */
+async function geocodeCity(cityName, lang) {
+  var url = 'https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(cityName) + '&count=1&language=' + (lang || 'fr') + '&format=json';
+  var res = await fetch(url);
+  if (!res.ok) throw new Error('Geocoding HTTP ' + res.status);
+  var json = await res.json();
+  if (!json.results || !json.results.length) throw new Error('Ville introuvable : ' + cityName);
+  var r = json.results[0];
+  return { lat: r.latitude, lng: r.longitude, name: r.name, country: r.country, countryCode: r.country_code };
+}
+
+async function fetchWeatherByCoords(loc) {
+  var url = new URL('https://api.open-meteo.com/v1/forecast');
+  url.search = new URLSearchParams({
+    latitude: loc.lat, longitude: loc.lng,
+    current: 'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,is_day',
+    hourly: 'temperature_2m,visibility',
+    daily: 'weather_code,temperature_2m_max,temperature_2m_min,uv_index_max',
+    timezone: 'auto', forecast_days: 7
+  });
+  var res = await fetch(url);
+  if (!res.ok) throw new Error('Forecast HTTP ' + res.status);
+  var j = await res.json();
+  var c = j.current, d = j.daily, h = j.hourly;
+  var now = new Date(c.time);
+  var startOfDay = new Date(now); startOfDay.setHours(0,0,0,0);
+  var idx0 = Math.max(0, h.time.findIndex(function(t) { return new Date(t) >= startOfDay; }));
+  var hourly24 = h.temperature_2m.slice(idx0, idx0 + 24).map(Math.round);
+  var curIdx = Math.max(0, h.time.findIndex(function(t) { return new Date(t) >= now; }) - 1);
+  var visKm = Math.round((h.visibility[curIdx] || 10000) / 1000);
+  return {
+    city: loc.name, country: loc.country,
+    countryCode: (loc.countryCode || '??').toUpperCase(),
+    date: dateLong(c.time, CONFIG.language),
+    dateShort: dateShortFmt(c.time),
+    time: c.time.split('T')[1].substring(0, 5),
+    current: {
+      temp: Math.round(c.temperature_2m),
+      condition: WMO_CONDITION(c.weather_code, c.is_day),
+      description: WMO_DESC[c.weather_code] || '—',
+      feelsLike: Math.round(c.apparent_temperature),
+      wind: Math.round(c.wind_speed_10m),
+      windDir: dirFromDeg(c.wind_direction_10m),
+      windDeg: Math.round(c.wind_direction_10m),
+      humidity: Math.round(c.relative_humidity_2m),
+      pressure: Math.round(c.surface_pressure),
+      uvIndex: Math.round(d.uv_index_max[0] || 0),
+      visibility: visKm
+    },
+    hourly: hourly24,
+    forecast: d.time.map(function(day, i) {
+      return { day: dayShort(day, CONFIG.language), icon: WMO_CONDITION(d.weather_code[i]), min: Math.round(d.temperature_2m_min[i]), max: Math.round(d.temperature_2m_max[i]) };
+    })
+  };
+}
+
+/* Sparkline */
+function sparklineSvg(temps) {
+  var w=200,h=60,pad=4;
+  var min=Math.min.apply(null,temps), max=Math.max.apply(null,temps);
+  var range=(max-min)||1;
+  var pts=temps.map(function(t,i){return{x:pad+(i/(temps.length-1))*(w-pad*2),y:pad+(1-(t-min)/range)*(h-pad*2)};});
+  var d='M '+pts[0].x.toFixed(2)+' '+pts[0].y.toFixed(2);
+  for(var i=0;i<pts.length-1;i++){
+    var p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
+    var cp1x=p1.x+(p2.x-p0.x)/6,cp1y=p1.y+(p2.y-p0.y)/6;
+    var cp2x=p2.x-(p3.x-p1.x)/6,cp2y=p2.y-(p3.y-p1.y)/6;
+    d+=' C '+cp1x.toFixed(2)+' '+cp1y.toFixed(2)+', '+cp2x.toFixed(2)+' '+cp2y.toFixed(2)+', '+p2.x.toFixed(2)+' '+p2.y.toFixed(2);
+  }
+  var area=d+' L '+pts[pts.length-1].x.toFixed(2)+' '+(h-pad)+' L '+pts[0].x.toFixed(2)+' '+(h-pad)+' Z';
+  var maxIdx=temps.indexOf(max), minIdx=temps.indexOf(min);
+  var gradId='spark-'+Math.random().toString(36).slice(2,8);
+  return '<svg class="st-chart-svg" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><defs><linearGradient id="'+gradId+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity="0.35"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs><path d="'+area+'" fill="url(#'+gradId+')" /><path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /><circle cx="'+pts[maxIdx].x.toFixed(2)+'" cy="'+pts[maxIdx].y.toFixed(2)+'" r="2.5" fill="var(--st-marker-max)"/><circle cx="'+pts[maxIdx].x.toFixed(2)+'" cy="'+pts[maxIdx].y.toFixed(2)+'" r="5" fill="var(--st-marker-max)" fill-opacity="0.2"/><circle cx="'+pts[minIdx].x.toFixed(2)+'" cy="'+pts[minIdx].y.toFixed(2)+'" r="2.5" fill="var(--st-marker-min)"/><circle cx="'+pts[minIdx].x.toFixed(2)+'" cy="'+pts[minIdx].y.toFixed(2)+'" r="5" fill="var(--st-marker-min)" fill-opacity="0.2"/></svg>';
+}
+
+function rangeBar(min, max, weekMin, weekMax) {
+  var total=(weekMax-weekMin)||1;
+  return { top:((weekMax-max)/total)*100, height:((max-min)/total)*100 };
+}
+
+function compassSvg(deg) {
+  return '<svg class="st-compass-svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="1" opacity="0.25"/><text x="16" y="6" text-anchor="middle" fill="currentColor" opacity="0.5" font-size="6" font-family="monospace">N</text><g transform="rotate('+deg+' 16 16)"><path d="M 16 4 L 19 16 L 16 14 L 13 16 Z" fill="currentColor"/></g></svg>';
+}
+
+/* Template HTML */
+function stratumTemplate(d) {
+  var weekMin=Math.min.apply(null,d.forecast.map(function(f){return f.min;}));
+  var weekMax=Math.max.apply(null,d.forecast.map(function(f){return f.max;}));
+  var chartMin=Math.min.apply(null,d.hourly), chartMax=Math.max.apply(null,d.hourly);
+  var uvLabel = d.current.uvIndex >= 8 ? 'élevé' : d.current.uvIndex >= 6 ? 'fort' : d.current.uvIndex >= 3 ? 'modéré' : 'faible';
+  var forecastHtml = d.forecast.map(function(f,i){
+    var bar=rangeBar(f.min,f.max,weekMin,weekMax);
+    return '<div class="st-day'+(i===0?' today':'')+'"><div class="st-day-name">'+f.day+'</div><div class="st-day-icon">'+iconSvg(f.icon)+'</div><div class="st-day-bar"><div class="st-day-bar-fill" style="top:'+bar.top.toFixed(1)+'%;height:'+bar.height.toFixed(1)+'%"></div></div><div class="st-day-temps"><div class="st-day-hi">'+f.max+'°</div><div class="st-day-lo">'+f.min+'°</div></div></div>';
+  }).join('');
+
+  return '<div class="st-shell"><div class="st-bar"><div class="st-id"><span class="st-id-city">'+d.city.toUpperCase()+'</span><span class="st-id-loc">/ '+d.countryCode+'</span></div><div class="st-stamp"><span>'+d.dateShort+' · '+d.time+'</span><span class="st-live">LIVE</span></div></div><div class="st-hero"><div class="st-temp-block"><div class="st-icon-temp"><div class="st-icon" data-cond="'+d.current.condition+'">'+iconSvg(d.current.condition)+'</div><div class="st-temp">'+d.current.temp+'<span class="deg">°C</span></div></div><div class="st-cond">'+d.current.description+'</div><div class="st-cond-sub"><span>RESSENTI '+d.current.feelsLike+'°</span><span>VISIBILITÉ '+d.current.visibility+' km</span></div></div><div class="st-chart"><div class="st-chart-head"><span>24H · TEMPÉRATURE</span><span class="st-chart-stats"><b>'+chartMax+'°</b> max · '+chartMin+'° min</span></div>'+sparklineSvg(d.hourly)+'<div class="st-chart-axis"><span>00h</span><span>06h</span><span>12h</span><span>18h</span><span>24h</span></div></div></div><div class="st-metrics"><div class="st-metric st-metric--wind"><div class="st-metric-label">'+iconWind()+' VENT</div><div class="st-metric-val">'+d.current.wind+'<span class="unit">km/h</span></div><div class="st-metric-sub">'+d.current.windDir+' · '+d.current.windDeg+'°</div>'+compassSvg(d.current.windDeg)+'</div><div class="st-metric"><div class="st-metric-label">'+iconDrop()+' HUMIDITÉ</div><div class="st-metric-val">'+d.current.humidity+'<span class="unit">%</span></div><div class="st-gauge"><div class="st-gauge-fill" style="width:'+d.current.humidity+'%"></div></div></div><div class="st-metric"><div class="st-metric-label"><svg class="wx-icon"><use href="#i-gauge"/></svg> PRESSION</div><div class="st-metric-val">'+d.current.pressure+'<span class="unit">hPa</span></div></div><div class="st-metric"><div class="st-metric-label"><svg class="wx-icon"><use href="#i-sun-uv"/></svg> INDICE UV</div><div class="st-metric-val">'+d.current.uvIndex+'<span class="unit">/11</span></div><div class="st-metric-sub">'+uvLabel+'</div></div></div><div class="st-forecast"><div class="st-forecast-head"><span>PRÉVISIONS · 7 JOURS</span><span class="st-forecast-stats">min <b>'+weekMin+'°</b> · max <b>'+weekMax+'°</b></span></div><div class="st-forecast-grid">'+forecastHtml+'</div></div></div>';
+}
+
+/* Mock data (affichage instantané avant le 1er fetch) */
+function makeMockData() {
+  var now = new Date();
+  var h = ('0'+now.getHours()).slice(-2)+':'+('0'+now.getMinutes()).slice(-2);
+  var d = ('0'+now.getDate()).slice(-2)+'.'+('0'+(now.getMonth()+1)).slice(-2)+'.'+now.getFullYear();
+  return {
+    city: CONFIG.city, country: 'Maroc', countryCode: 'MA',
+    date: d, dateShort: d, time: h,
+    current: { temp:22, condition:'partly-cloudy', description:'Partiellement nuageux', feelsLike:24, wind:18, windDir:'NO', windDeg:315, humidity:65, pressure:1015, uvIndex:5, visibility:10 },
+    hourly: [16,16,15,15,14,14,15,17,19,21,22,23,24,24,25,24,23,22,21,20,19,18,17,17],
+    forecast: [
+      {day:'LUN',icon:'sunny',min:18,max:25},{day:'MAR',icon:'partly-cloudy',min:17,max:24},
+      {day:'MER',icon:'cloudy',min:16,max:22},{day:'JEU',icon:'rainy',min:14,max:20},
+      {day:'VEN',icon:'rainy',min:15,max:21},{day:'SAM',icon:'partly-cloudy',min:17,max:23},
+      {day:'DIM',icon:'sunny',min:19,max:26}
+    ]
+  };
+}
+
+var lastData = null;
+
+async function resolveLocation() {
+  return await geocodeCity(CONFIG.city, CONFIG.language);
+}
+
+function showStatus(msg) {
+  var el = document.querySelector(CONFIG.targetSelector);
+  if (el) el.innerHTML = '<div class="wx-status">'+msg+'</div>';
+}
+
+async function refresh() {
+  try {
+    var loc = await resolveLocation();
+    if (!loc || loc.lat == null) throw new Error('Geocoding vide');
+    var data = await fetchWeatherByCoords(loc);
+    if (!data || !data.current || !data.forecast || !data.forecast.length) throw new Error('Forecast vide');
+    lastData = data;
+    var el = document.querySelector(CONFIG.targetSelector);
+    if (!el) return;
+    el.dataset.theme = CONFIG.theme;
+    el.innerHTML = stratumTemplate(data);
+    if (CONFIG.debug) console.log('[Meteo] OK', data);
+  } catch(err) {
+    if (CONFIG.debug) console.warn('[Meteo] KO, ancien affichage conservé :', err.message);
+    if (!lastData) showStatus('Données météo indisponibles');
+  }
+}
+
+/* Injecte le sprite SVG puis démarre */
+function bootstrap() {
+  var el = document.querySelector(CONFIG.targetSelector);
+  if (el) { el.dataset.theme = CONFIG.theme; el.innerHTML = stratumTemplate(makeMockData()); }
+  lastData = makeMockData();
+  refresh();
+}
+
+fetch('/widgets/meteo/assets/icons.svg')
+  .then(function(r) { return r.text(); })
+  .then(function(svg) {
+    var div = document.createElement('div');
+    div.style.display = 'none';
+    div.innerHTML = svg;
+    document.body.insertBefore(div, document.body.firstChild);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootstrap);
+    } else {
+      bootstrap();
+    }
+  })
+  .catch(function() {
+    /* Sprite non disponible → démarrer quand même */
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootstrap);
+    } else {
+      bootstrap();
+    }
+  });
+
+setInterval(refresh, CONFIG.refreshIntervalMinutes * 60 * 1000);
+
+window.WeatherWidget = {
+  refresh: refresh,
+  setTheme: function(theme) {
+    CONFIG.theme = theme;
+    if (lastData) { var el=document.querySelector(CONFIG.targetSelector); if(el){el.dataset.theme=theme;el.innerHTML=stratumTemplate(lastData);} }
+  },
+  setCity: function(city) { CONFIG.city = city; refresh(); },
+  getData: function() { return lastData; }
+};
+</script>
+</body>
+</html>

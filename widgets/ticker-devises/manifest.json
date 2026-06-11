@@ -1,0 +1,6 @@
+{
+  "type": "ticker-devises",
+  "label": "Ticker Devises",
+  "icon": "📈",
+  "dataSource": { "url": "/api/widgets/ticker-devises" }
+}

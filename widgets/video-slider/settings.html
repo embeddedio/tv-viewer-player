@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paramètres — Vidéo Slider</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #152238;
+      --accent: #0ea5e9;
+      --border: #e5e7eb;
+      --text: #1f2937;
+      --text-dim: #6b7280;
+      --bg: #f9fafb;
+    }
+    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: var(--text); background: #fff; overflow: hidden; }
+    #app { display: flex; flex-direction: column; height: 100%; }
+
+    #header {
+      background: var(--navy); padding: 16px 28px;
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    #header h1 { color: #fff; font-size: 1.05rem; font-weight: 700; }
+    #header p  { color: rgba(255,255,255,0.45); font-size: 0.65rem; margin-top: 3px; }
+    #close-btn {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.6); font-size: 1.3rem; line-height: 1;
+      width: 34px; height: 34px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; transition: background .15s;
+    }
+    #close-btn:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+    #content { flex: 1; overflow-y: auto; padding: 24px 28px; }
+
+    .section { margin-bottom: 28px; }
+    .section-title {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: .07em;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px;
+    }
+    .section-hint { font-size: 0.78rem; color: var(--text-dim); margin-top: 6px; }
+
+    .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .radio-group label {
+      display: flex; align-items: center; gap: 10px; cursor: pointer;
+      padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
+      transition: background .12s;
+    }
+    .radio-group label:hover { background: var(--bg); }
+    .radio-group input { accent-color: var(--accent); width: 16px; height: 16px; }
+
+    #folder-list { margin-top: 10px; padding-left: 24px; display: flex; flex-direction: column; gap: 6px; }
+
+    #footer {
+      padding: 16px 28px; border-top: 1px solid var(--border);
+      display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0;
+    }
+    .btn {
+      padding: 9px 20px; border-radius: 8px; font-size: 0.85rem;
+      font-weight: 600; cursor: pointer; border: none; transition: all .15s;
+    }
+    .btn-primary { background: var(--navy); color: #fff; }
+    .btn-primary:hover { background: #1e3a5f; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-ghost { background: none; border: 1px solid var(--border); color: var(--text); }
+    .btn-ghost:hover { background: var(--bg); }
+
+    #status { font-size: 0.78rem; color: var(--text-dim); align-self: center; }
+    #status.ok  { color: #16a34a; }
+    #status.err { color: #dc2626; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <div>
+      <h1>🎬 Vidéo Slider</h1>
+      <p>Configuration de la lecture vidéo en séquence</p>
+    </div>
+    <button id="close-btn" title="Fermer">✕</button>
+  </div>
+
+  <div id="content">
+    <div class="section">
+      <div class="section-title">Source des vidéos</div>
+      <div class="radio-group">
+        <label>
+          <input type="radio" name="source" value="all" checked />
+          Toute la médiathèque
+        </label>
+        <label>
+          <input type="radio" name="source" value="folders" />
+          Dossiers sélectionnés
+        </label>
+      </div>
+      <div id="folder-list" style="display:none"></div>
+      <p class="section-hint">Les vidéos se succèdent automatiquement à la fin de chaque lecture.</p>
+    </div>
+  </div>
+
+  <div id="footer">
+    <span id="status"></span>
+    <button class="btn btn-ghost" id="cancel-btn">Annuler</button>
+    <button class="btn btn-primary" id="save-btn">Enregistrer</button>
+  </div>
+</div>
+
+<script>
+  var folders = [];
+  var selectedFolders = [];
+
+  document.getElementById('close-btn').onclick =
+  document.getElementById('cancel-btn').onclick = function() {
+    window.parent.postMessage({ type: 'widget-settings-close' }, '*');
+  };
+
+  document.querySelectorAll('input[name="source"]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      document.getElementById('folder-list').style.display =
+        r.value === 'folders' ? 'flex' : 'none';
+    });
+  });
+
+  function renderFolders() {
+    var list = document.getElementById('folder-list');
+    list.innerHTML = '';
+    if (!folders.length) {
+      list.innerHTML = '<span style="color:#6b7280;font-size:0.82rem">Aucun dossier créé</span>';
+      return;
+    }
+    folders.forEach(function(f) {
+      var label = document.createElement('label');
+      label.style.cssText = 'display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.85rem';
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = f;
+      cb.style.cssText = 'accent-color:#0ea5e9;width:16px;height:16px';
+      if (selectedFolders.includes(f)) cb.checked = true;
+      cb.addEventListener('change', function() {
+        if (cb.checked) { if (!selectedFolders.includes(f)) selectedFolders.push(f); }
+        else { selectedFolders = selectedFolders.filter(function(x) { return x !== f; }); }
+      });
+      label.appendChild(cb);
+      label.appendChild(document.createTextNode(f));
+      list.appendChild(label);
+    });
+  }
+
+  function setStatus(msg, cls) {
+    var el = document.getElementById('status');
+    el.textContent = msg;
+    el.className = cls || '';
+  }
+
+  async function init() {
+    try {
+      var [foldersRes, styleRes] = await Promise.all([
+        fetch('/folders').then(function(r) { return r.json(); }),
+        fetch('/api/widgets/video-slider/style').then(function(r) { return r.json(); }).catch(function() { return {}; }),
+      ]);
+
+      folders = (foldersRes.folders || []).sort();
+
+      var sources = styleRes.sources;
+      if (Array.isArray(sources)) {
+        selectedFolders = sources;
+        document.querySelector('input[name="source"][value="folders"]').checked = true;
+        document.getElementById('folder-list').style.display = 'flex';
+      }
+
+      renderFolders();
+    } catch(e) {
+      setStatus('Erreur de chargement', 'err');
+    }
+  }
+
+  document.getElementById('save-btn').addEventListener('click', async function() {
+    var btn = document.getElementById('save-btn');
+    btn.disabled = true;
+    setStatus('Enregistrement…');
+
+    var sourceRadio = document.querySelector('input[name="source"]:checked');
+    var sources = sourceRadio && sourceRadio.value === 'folders' ? selectedFolders : 'all';
+
+    try {
+      var r = await fetch('/api/widgets/video-slider/style', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sources: sources }),
+      });
+      if (!r.ok) throw new Error(r.status);
+      setStatus('Enregistré ✓', 'ok');
+      setTimeout(function() {
+        window.parent.postMessage({ type: 'widget-settings-close' }, '*');
+      }, 800);
+    } catch(e) {
+      setStatus('Erreur d\'enregistrement', 'err');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  init();
+</script>
+</body>
+</html>

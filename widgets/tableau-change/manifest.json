@@ -1,0 +1,10 @@
+{
+  "type": "tableau-change",
+  "label": "Tableau de Change",
+  "icon": "💱",
+  "dataSource": { "url": "/api/widgets/tableau-change" },
+  "settingsPages": {
+    "item":   "/widgets/tableau-change/settings-item.html",
+    "widget": "/widgets/tableau-change/settings.html"
+  }
+}

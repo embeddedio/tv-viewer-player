@@ -1,0 +1,67 @@
+{
+  "sections": [
+    {
+      "title": "Titre et logo du bureau",
+      "fields": [
+        { "key": "headerWeight",    "label": "Hauteur de la zone du titre",  "step": 0.5, "hint": "défaut : 3.5" },
+        { "key": "logoWidthPct",    "label": "Taille du logo (%)",           "step": 1,   "hint": "défaut : 21%" }
+      ]
+    },
+    {
+      "title": "Largeurs des colonnes du tableau",
+      "fields": [
+        { "key": "colUnitePct",     "label": "Colonne Unité (%)",            "step": 1,   "hint": "défaut : 10%" },
+        { "key": "colValPct",       "label": "Colonnes Achat et Vente (%)",  "step": 1,   "hint": "défaut : 15%" }
+      ]
+    },
+    {
+      "title": "Taille du texte — Barre de titre",
+      "fields": [
+        { "key": "titleFontPx",     "label": "Titre du bureau (px)",         "step": 1,   "hint": "0 = automatique" },
+        { "key": "colHeaderFontPx", "label": "Noms des colonnes (px)",       "step": 1,   "hint": "0 = automatique" }
+      ]
+    },
+    {
+      "title": "Taille du texte — Lignes du tableau",
+      "fields": [
+        { "key": "rowUnitFontPx",   "label": "Colonne Unité (px)",           "step": 1,   "hint": "0 = automatique" },
+        { "key": "rowNameFontPx",   "label": "Colonne Devise (px)",          "step": 1,   "hint": "0 = automatique" },
+        { "key": "rowValFontPx",    "label": "Colonnes Achat et Vente (px)", "step": 1,   "hint": "0 = automatique" },
+        { "key": "fontScale",       "label": "Ajustement global (×)",        "step": 0.1, "hint": "0 = automatique (1.0×)" }
+      ]
+    },
+    {
+      "title": "Vertical Dark — Barre latérale",
+      "theme": "vertical-dark",
+      "fields": [
+        { "key": "vdTitleFontPx",   "label": "Texte du titre (px)",          "step": 1,   "hint": "0 = automatique" }
+      ]
+    },
+    {
+      "title": "Vertical Dark — Barre de titre du tableau",
+      "theme": "vertical-dark",
+      "fields": [
+        { "key": "vdHeaderFontPx",  "label": "Noms des colonnes (px)",       "step": 1,   "hint": "0 = automatique" }
+      ]
+    },
+    {
+      "title": "Vertical Dark — Taille du texte par colonne",
+      "theme": "vertical-dark",
+      "fields": [
+        { "key": "vdUnitFontPx",    "label": "Colonne Unité (px)",           "step": 1,   "hint": "0 = automatique" },
+        { "key": "vdNameFontPx",    "label": "Colonne Devise (px)",          "step": 1,   "hint": "0 = automatique" },
+        { "key": "vdValFontPx",     "label": "Colonnes Achat et Vente (px)", "step": 1,   "hint": "0 = automatique" }
+      ]
+    },
+    {
+      "title": "Vertical Dark — Largeurs des colonnes",
+      "theme": "vertical-dark",
+      "fields": [
+        { "key": "vdColUnitePct",   "label": "Colonne Unité (%)",            "step": 1,   "hint": "0 = automatique" },
+        { "key": "vdColDevisePct",  "label": "Colonne Devise (%)",           "step": 1,   "hint": "0 = automatique" },
+        { "key": "vdColValPct",     "label": "Colonnes Achat et Vente (%)",  "step": 1,   "hint": "0 = automatique (par col.)" },
+        { "key": "vdColCardPct",    "label": "Colonnes Réf. et TPE (%)",     "step": 1,   "hint": "0 = automatique (par col.)" }
+      ]
+    }
+  ]
+}

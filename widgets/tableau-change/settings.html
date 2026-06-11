@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paramètres — Tableau de Change</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #152238;
+      --navy-hover: #1e3a5f;
+      --accent: #0ea5e9;
+      --border: #e5e7eb;
+      --text: #1f2937;
+      --text-dim: #6b7280;
+      --bg: #f9fafb;
+      --bg-hover: #f3f4f6;
+      --highlight: #ecfeff;
+    }
+    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: var(--text); background: #fff; overflow: hidden; }
+
+    #app { display: flex; flex-direction: column; height: 100%; }
+
+    /* Header */
+    #header {
+      background: var(--navy); padding: 16px 28px;
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    #header h1 { color: #fff; font-size: 1.05rem; font-weight: 700; }
+    #header p  { color: rgba(255,255,255,0.45); font-size: 0.65rem; margin-top: 3px; }
+    #close-btn {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.6); font-size: 1.3rem; line-height: 1;
+      width: 34px; height: 34px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; transition: background .15s;
+    }
+    #close-btn:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+    /* Tabs */
+    #tab-bar {
+      display: flex; gap: 4px; padding: 14px 28px 0;
+      border-bottom: 1px solid var(--border); background: var(--bg); flex-shrink: 0;
+    }
+    .tab-btn {
+      padding: 8px 18px; font-size: 0.82rem; font-weight: 600;
+      border: none; border-bottom: 2px solid transparent;
+      background: none; cursor: pointer; color: var(--text-dim);
+      transition: all .15s; border-radius: 6px 6px 0 0;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--navy); border-bottom-color: var(--navy); background: #fff; }
+
+    /* Panels */
+    #panels { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
+    .panel { display: none; flex-direction: column; height: 100%; min-height: 0; }
+    .panel.active { display: flex; }
+    .panel-scroll { flex: 1; overflow-y: auto; padding: 24px 28px; }
+
+    /* Footer */
+    .panel-footer {
+      flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 28px; border-top: 1px solid var(--border); background: var(--bg);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 9px 22px; font-size: 0.82rem; border-radius: 8px; border: 1px solid;
+      cursor: pointer; font-weight: 600; transition: all .15s;
+    }
+    .btn-primary   { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .btn-primary:hover { background: var(--navy-hover); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-secondary { background: #fff; color: var(--text-dim); border-color: var(--border); }
+    .btn-secondary:hover { background: var(--bg-hover); }
+    .btn-apply     { background: #fff; color: var(--navy); border-color: var(--navy); }
+    .btn-apply:hover { background: #eef4ff; }
+    .btn-apply:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-ghost     { background: #fff; color: #dc2626; border-color: #fecaca; }
+    .btn-ghost:hover { background: #fef2f2; }
+    .btn-ghost:disabled { opacity: .4; cursor: not-allowed; }
+
+    /* ── Style tab ────────────────────────────────────────── */
+
+    .theme-selector-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 18px; background: #f1f5f9;
+      border: 1px solid var(--border); border-radius: 10px; margin-bottom: 24px;
+    }
+    .theme-selector-row label {
+      font-size: 0.75rem; font-weight: 700; color: var(--text-dim);
+      text-transform: uppercase; letter-spacing: .06em; white-space: nowrap;
+    }
+    .theme-select {
+      flex: 1; max-width: 260px; padding: 8px 12px;
+      border: 1px solid var(--border); border-radius: 8px;
+      background: #fff; font-size: 0.88rem; color: var(--text); cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' viewBox='0 0 12 8'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m1 1 5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px;
+    }
+    .theme-select:focus { outline: none; border-color: var(--navy); }
+    .theme-desc { font-size: 0.7rem; color: var(--text-dim); font-style: italic; }
+
+    .style-section { margin-bottom: 28px; }
+    .style-section:last-child { margin-bottom: 0; }
+    .section-label {
+      font-size: 0.62rem; font-weight: 800; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .fields-grid { display: grid; gap: 16px; }
+    .fields-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .fields-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .fields-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .fields-grid.cols-1 { grid-template-columns: 1fr; max-width: 320px; }
+
+    .field label { display: block; font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 5px; }
+    .field input[type=number] {
+      width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
+      font-size: 0.85rem; color: var(--text); background: var(--bg);
+      outline: none; transition: border-color .15s;
+    }
+    .field input[type=number]:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(21,34,56,.07); }
+    .field .hint { font-size: 0.62rem; color: var(--text-dim); margin-top: 4px; line-height: 1.4; }
+    .field-note { font-size: 0.65rem; color: var(--text-dim); font-style: italic; margin-top: 20px; }
+
+    /* ── Rates tables ─────────────────────────────────────── */
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    thead { position: sticky; top: 0; z-index: 10; background: var(--bg); }
+    thead tr { border-bottom: 2px solid var(--border); }
+    th { padding: 10px 16px; text-align: left; font-size: 0.7rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: .05em; }
+    th.right { text-align: right; }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:nth-child(even) { background: rgba(0,0,0,.015); }
+    tbody tr.modified { background: var(--highlight); }
+    td { padding: 10px 16px; }
+    td.right { text-align: right; }
+    .currency-code { font-weight: 700; }
+    .currency-label { color: var(--text-dim); font-size: 0.75rem; margin-left: 6px; }
+    .modified-badge { font-size: 0.6rem; font-weight: 700; color: #0891b2; text-transform: uppercase; margin-left: 6px; }
+    .rate-input {
+      width: 90px; padding: 6px 10px; text-align: right;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-size: 0.82rem; background: var(--bg); outline: none; transition: border-color .15s;
+    }
+    .rate-input:focus { border-color: var(--accent); }
+    .tpe-val { color: var(--text-dim); font-size: 0.75rem; }
+
+    /* Loading */
+    .loading { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-dim); font-size: 0.85rem; }
+    .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin .6s linear infinite; margin-right: 10px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <div id="header">
+    <div>
+      <h1>Paramètres — Tableau de Change</h1>
+      <p>Les surcharges de valeurs expirent en fin de journée</p>
+    </div>
+    <button id="close-btn" title="Fermer">&#x2715;</button>
+  </div>
+
+  <div id="tab-bar">
+    <button class="tab-btn active" data-tab="style">Style</button>
+    <button class="tab-btn" data-tab="bestchange">BestChange</button>
+    <button class="tab-btn" data-tab="bkam">Réf BKAM</button>
+  </div>
+
+  <div id="panels">
+
+    <!-- ── Style ── -->
+    <div class="panel active" id="panel-style">
+      <div class="panel-scroll" id="style-content">
+        <div class="loading"><div class="spinner"></div>Chargement...</div>
+      </div>
+      <div class="panel-footer">
+        <button class="btn btn-ghost" id="style-reset">Tout remettre à auto</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary" id="style-cancel">Annuler</button>
+          <button class="btn btn-apply" id="style-apply">Appliquer</button>
+          <button class="btn btn-primary" id="style-save">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BestChange ── -->
+    <div class="panel" id="panel-bestchange">
+      <div class="panel-scroll" id="bc-content">
+        <div class="loading"><div class="spinner"></div>Chargement...</div>
+      </div>
+      <div class="panel-footer">
+        <button class="btn btn-ghost" id="bc-reset" disabled>Réinitialiser tout</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary" id="bc-cancel">Annuler</button>
+          <button class="btn btn-primary" id="bc-save">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BKAM ── -->
+    <div class="panel" id="panel-bkam">
+      <div class="panel-scroll" id="bkam-content">
+        <div class="loading"><div class="spinner"></div>Chargement...</div>
+      </div>
+      <div class="panel-footer">
+        <button class="btn btn-ghost" id="bkam-reset" disabled>Réinitialiser tout</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary" id="bkam-cancel">Annuler</button>
+          <button class="btn btn-primary" id="bkam-save">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  function close() {
+    if (window.parent && window.parent !== window)
+      window.parent.postMessage({ type: 'widget-settings-close' }, '*');
+  }
+
+  async function apiFetch(url, opts) {
+    const r = await fetch(url, opts);
+    if (!r.ok) throw new Error(r.status);
+    return r.json();
+  }
+
+  function setSaving(btn, saving) {
+    btn.disabled = saving;
+    btn.textContent = saving ? 'Enregistrement...' : 'Enregistrer';
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  // ── Tabs ──────────────────────────────────────────────────────────────────
+
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const panels  = document.querySelectorAll('.panel');
+  const loaded  = {};
+
+  function activateTab(id) {
+    tabBtns.forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+    panels.forEach(p  => p.classList.toggle('active', p.id === 'panel-' + id));
+    if (!loaded[id]) { loaded[id] = true; initTab(id); }
+  }
+
+  tabBtns.forEach(btn => btn.addEventListener('click', () => activateTab(btn.dataset.tab)));
+  document.getElementById('close-btn').addEventListener('click', close);
+
+  // ── Style tab ────────────────────────────────────────────────────────────
+
+  var styleData  = {};
+  var schemaData = null;
+  var activeThemeFilter = 'default';
+
+  function initTab(id) {
+    if (id === 'style')      initStyle();
+    if (id === 'bestchange') initBestChange();
+    if (id === 'bkam')       initBkam();
+  }
+
+  async function initStyle() {
+    const content = document.getElementById('style-content');
+    try {
+      const [schema, style] = await Promise.all([
+        apiFetch('/widgets/tableau-change/schema.json'),
+        apiFetch('/api/widgets/tableau-change/style'),
+      ]);
+      schemaData = schema;
+      var allKeys = schema.sections.flatMap(function(s) { return s.fields.map(function(f) { return f.key; }); });
+      var apiStyle = style || {};
+      styleData = {};
+      allKeys.forEach(function(k) { styleData[k] = (typeof apiStyle[k] === 'number') ? apiStyle[k] : 0; });
+      renderStyle(content, schema, styleData);
+    } catch (e) {
+      content.innerHTML = '<div class="loading">Erreur de chargement</div>';
+    }
+  }
+
+  function colsClass(count) {
+    if (count >= 5) return 'cols-3';
+    if (count === 4) return 'cols-4';
+    if (count === 3) return 'cols-3';
+    if (count === 2) return 'cols-2';
+    return 'cols-1';
+  }
+
+  function renderStyle(container, schema, values) {
+    // Regroup sections by theme (null = default)
+    var themes = {};
+    schema.sections.forEach(function(s) {
+      var key = s.theme || 'default';
+      if (!themes[key]) themes[key] = [];
+      themes[key].push(s);
+    });
+
+    var themeKeys = Object.keys(themes);
+    var hasMultiple = themeKeys.length > 1;
+
+    var themeLabels = { 'default': 'Thème Défaut', 'vertical-dark': 'Vertical Dark' };
+
+    var html = '';
+
+    // Theme selector row
+    if (hasMultiple) {
+      html += '<div class="theme-selector-row">'
+        + '<label>Configurer le thème</label>'
+        + '<select class="theme-select" id="theme-filter">';
+      themeKeys.forEach(function(k) {
+        html += '<option value="' + esc(k) + '"' + (k === activeThemeFilter ? ' selected' : '') + '>'
+          + esc(themeLabels[k] || k) + '</option>';
+      });
+      html += '</select>'
+        + '<span class="theme-desc">Les styles s\'appliquent au thème sélectionné.</span>'
+        + '</div>';
+    }
+
+    // Render sections for the active theme
+    var sections = themes[activeThemeFilter] || themes['default'] || [];
+    sections.forEach(function(section) {
+      html += '<div class="style-section">'
+        + '<div class="section-label">' + esc(section.title) + '</div>'
+        + '<div class="fields-grid ' + colsClass(section.fields.length) + '">';
+      section.fields.forEach(function(field) {
+        var val = values[field.key] || 0;
+        html += '<div class="field">'
+          + '<label for="f-' + esc(field.key) + '">' + esc(field.label) + '</label>'
+          + '<input type="number" id="f-' + esc(field.key) + '" data-key="' + esc(field.key) + '"'
+          + ' value="' + (val === 0 ? '' : val) + '" min="0" step="' + (field.step || 1) + '"'
+          + ' placeholder="0 = auto" />'
+          + (field.hint ? '<div class="hint">' + esc(field.hint) + '</div>' : '')
+          + '</div>';
+      });
+      html += '</div></div>';
+    });
+
+    html += '<p class="field-note">Toutes les valeurs à 0 → calcul automatique selon la taille du widget.</p>';
+    container.innerHTML = html;
+
+    // Theme filter change
+    var sel = container.querySelector('#theme-filter');
+    if (sel) {
+      sel.addEventListener('change', function() {
+        activeThemeFilter = sel.value;
+        renderStyle(container, schema, styleData);
+      });
+    }
+
+    // Input bindings
+    container.querySelectorAll('input[data-key]').forEach(function(inp) {
+      inp.addEventListener('input', function() {
+        var v = parseFloat(inp.value);
+        styleData[inp.dataset.key] = isNaN(v) ? 0 : v;
+      });
+    });
+  }
+
+  async function postStyle(data) {
+    return apiFetch('/api/widgets/tableau-change/style', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  }
+
+  function setStyleBusy(busy) {
+    ['style-apply', 'style-save'].forEach(function(id) {
+      var b = document.getElementById(id);
+      b.disabled = busy;
+    });
+    var saveBtn = document.getElementById('style-save');
+    saveBtn.textContent = busy ? 'Enregistrement...' : 'Enregistrer';
+    var applyBtn = document.getElementById('style-apply');
+    applyBtn.textContent = busy ? '...' : 'Appliquer';
+  }
+
+  document.getElementById('style-apply').addEventListener('click', async function() {
+    setStyleBusy(true);
+    try {
+      await postStyle(styleData);
+      // Verify: read back what the server actually stored
+      const check = await apiFetch('/api/widgets/tableau-change/style');
+      var applyBtn = document.getElementById('style-apply');
+      var rv = check ? (check.rowValFontPx || 0) : '?';
+      var rn = check ? (check.rowNameFontPx || 0) : '?';
+      var nk = check ? Object.keys(check).length : 0;
+      applyBtn.textContent = 'OK srv: rv=' + rv + ' rn=' + rn + ' n=' + nk;
+      setTimeout(function() { applyBtn.textContent = 'Appliquer'; }, 4000);
+    } catch (e) {
+      var applyBtn = document.getElementById('style-apply');
+      applyBtn.textContent = 'ERREUR: ' + (e && e.message ? e.message : 'inconnu');
+      setTimeout(function() { applyBtn.textContent = 'Appliquer'; }, 4000);
+    }
+    setStyleBusy(false);
+  });
+
+  document.getElementById('style-save').addEventListener('click', async function() {
+    setStyleBusy(true);
+    try { await postStyle(styleData); close(); } catch (e) { setStyleBusy(false); }
+  });
+
+  document.getElementById('style-reset').addEventListener('click', async function() {
+    var allKeys = schemaData ? schemaData.sections.flatMap(function(s) { return s.fields.map(function(f) { return f.key; }); }) : [];
+    var empty = {};
+    allKeys.forEach(function(k) { empty[k] = 0; });
+    setStyleBusy(true);
+    try { await postStyle(empty); close(); } catch (e) { setStyleBusy(false); }
+  });
+
+  document.getElementById('style-cancel').addEventListener('click', close);
+
+  // ── BestChange tab ───────────────────────────────────────────────────────
+
+  var bcRates = [], bcOverrides = {};
+
+  async function initBestChange() {
+    var content = document.getElementById('bc-content');
+    try {
+      var data = await apiFetch('/api/widgets/tableau-change');
+      bcRates = data.rates || [];
+      bcOverrides = {};
+      if (data.overrides) {
+        Object.entries(data.overrides).forEach(function(_ref) {
+          var code = _ref[0], o = _ref[1];
+          if (o.buy != null || o.sell != null)
+            bcOverrides[code] = { buy: o.buy || '', sell: o.sell || '' };
+        });
+      }
+      renderBcTable(content);
+    } catch (e) { content.innerHTML = '<div class="loading">Erreur de chargement</div>'; }
+  }
+
+  function renderBcTable(container) {
+    updateBcResetBtn();
+    var html = '<table><thead><tr>'
+      + '<th>Devise</th><th class="right">Achat</th><th class="right">Vente</th>'
+      + '</tr></thead><tbody>';
+    bcRates.forEach(function(rate) {
+      var ov = bcOverrides[rate.code], mod = !!ov;
+      html += '<tr class="' + (mod ? 'modified' : '') + '" data-code="' + esc(rate.code) + '">'
+        + '<td><span class="currency-code">' + esc(rate.code) + '</span>'
+        + '<span class="currency-label">' + esc(rate.label) + '</span>'
+        + (mod ? '<span class="modified-badge">modifié</span>' : '') + '</td>'
+        + '<td class="right"><input class="rate-input" data-field="buy" value="' + esc(ov ? (ov.buy !== undefined ? ov.buy : rate.buy) : rate.buy) + '" /></td>'
+        + '<td class="right"><input class="rate-input" data-field="sell" value="' + esc(ov ? (ov.sell !== undefined ? ov.sell : rate.sell) : rate.sell) + '" /></td>'
+        + '</tr>';
+    });
+    html += '</tbody></table>';
+    container.innerHTML = html;
+    container.querySelectorAll('tr[data-code]').forEach(function(row) {
+      var code = row.dataset.code;
+      var rate = bcRates.find(function(r) { return r.code === code; }) || {};
+      row.querySelectorAll('.rate-input').forEach(function(inp) {
+        inp.addEventListener('input', function() {
+          var field = inp.dataset.field;
+          var ov = bcOverrides[code] || {};
+          var original = { buy: rate.buy || '', sell: rate.sell || '' };
+          var next = Object.assign({}, original, ov, { [field]: inp.value });
+          if (next.buy === original.buy && next.sell === original.sell) delete bcOverrides[code];
+          else bcOverrides[code] = next;
+          var badge = row.querySelector('.modified-badge');
+          if (bcOverrides[code] && !badge) {
+            row.querySelector('td').insertAdjacentHTML('beforeend', '<span class="modified-badge">modifié</span>');
+            row.classList.add('modified');
+          } else if (!bcOverrides[code] && badge) {
+            badge.remove(); row.classList.remove('modified');
+          }
+          updateBcResetBtn();
+        });
+      });
+    });
+  }
+
+  function updateBcResetBtn() {
+    document.getElementById('bc-reset').disabled = Object.keys(bcOverrides).length === 0;
+  }
+
+  document.getElementById('bc-save').addEventListener('click', async function() {
+    var btn = this; setSaving(btn, true);
+    var entries = bcRates.map(function(r) {
+      var ov = bcOverrides[r.code];
+      return { code: r.code, buy: ov ? (ov.buy !== undefined ? ov.buy : r.buy) : r.buy, sell: ov ? (ov.sell !== undefined ? ov.sell : r.sell) : r.sell };
+    });
+    try {
+      await apiFetch('/api/widgets/tableau-change/overrides', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ overrides: entries }),
+      });
+      close();
+    } catch (e) { setSaving(btn, false); }
+  });
+
+  document.getElementById('bc-reset').addEventListener('click', async function() {
+    var btn = document.getElementById('bc-save'); setSaving(btn, true);
+    try {
+      await apiFetch('/api/widgets/tableau-change/overrides', { method: 'DELETE' });
+      close();
+    } catch (e) { setSaving(btn, false); }
+  });
+
+  document.getElementById('bc-cancel').addEventListener('click', close);
+
+  // ── BKAM tab ─────────────────────────────────────────────────────────────
+
+  var bkamByCode = {}, bkamBcRates = [], bkamOvs = {};
+
+  async function initBkam() {
+    var content = document.getElementById('bkam-content');
+    try {
+      var tc = await apiFetch('/api/widgets/tableau-change');
+      bkamByCode = tc.bkamByCode || {}; bkamBcRates = tc.rates || {}; bkamOvs = {};
+      if (tc.overrides) {
+        Object.entries(tc.overrides).forEach(function(_ref) {
+          var code = _ref[0], o = _ref[1];
+          if (o.bkamRef != null) bkamOvs[code] = { bkamRef: o.bkamRef };
+        });
+      }
+      renderBkamTable(content);
+    } catch (e) { content.innerHTML = '<div class="loading">Erreur de chargement</div>'; }
+  }
+
+  function parseTpe(v) {
+    var n = parseFloat(String(v).replace(',', '.'));
+    return isFinite(n) ? (n * 0.95).toFixed(4).replace('.', ',') : '-';
+  }
+
+  function updateBkamResetBtn() {
+    document.getElementById('bkam-reset').disabled = Object.keys(bkamOvs).length === 0;
+  }
+
+  function renderBkamTable(container) {
+    var html = '<table><thead><tr>'
+      + '<th>Devise</th><th class="right">Réf BKAM</th><th class="right">TPE (calc.)</th>'
+      + '</tr></thead><tbody>';
+    bkamBcRates.forEach(function(rate) {
+      var code = rate.code, entry = bkamByCode[code.toLowerCase()] || {};
+      var ov = bkamOvs[code], refVal = ov ? ov.bkamRef : (entry.reference || '-'), mod = !!ov;
+      html += '<tr class="' + (mod ? 'modified' : '') + '" data-code="' + esc(code) + '">'
+        + '<td><span class="currency-code">' + esc(code) + '</span>'
+        + '<span class="currency-label">' + esc(rate.label) + '</span>'
+        + (mod ? '<span class="modified-badge">modifié</span>' : '') + '</td>'
+        + '<td class="right"><input class="rate-input" data-original="' + esc(entry.reference || '-') + '" value="' + esc(refVal) + '" /></td>'
+        + '<td class="right"><span class="tpe-val" id="tpe-' + esc(code) + '">' + esc(parseTpe(refVal)) + '</span></td>'
+        + '</tr>';
+    });
+    html += '</tbody></table>';
+    container.innerHTML = html;
+    updateBkamResetBtn();
+    container.querySelectorAll('tr[data-code]').forEach(function(row) {
+      var code = row.dataset.code, inp = row.querySelector('.rate-input');
+      var tpeEl = document.getElementById('tpe-' + code);
+      inp.addEventListener('input', function() {
+        var original = inp.dataset.original, val = inp.value;
+        var entry = bkamByCode[code.toLowerCase()] || {};
+        if (val === original || val === (entry.reference || '-')) delete bkamOvs[code];
+        else bkamOvs[code] = { bkamRef: val };
+        if (tpeEl) tpeEl.textContent = parseTpe(val);
+        var badge = row.querySelector('.modified-badge');
+        if (bkamOvs[code] && !badge) {
+          row.querySelector('td').insertAdjacentHTML('beforeend', '<span class="modified-badge">modifié</span>');
+          row.classList.add('modified');
+        } else if (!bkamOvs[code] && badge) {
+          badge.remove(); row.classList.remove('modified');
+        }
+        updateBkamResetBtn();
+      });
+    });
+  }
+
+  document.getElementById('bkam-save').addEventListener('click', async function() {
+    var btn = this; setSaving(btn, true);
+    var entries = bkamBcRates.map(function(r) {
+      var ov = bkamOvs[r.code];
+      return { code: r.code, bkamRef: ov ? ov.bkamRef : undefined };
+    });
+    try {
+      await apiFetch('/api/widgets/tableau-change/overrides', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ overrides: entries }),
+      });
+      close();
+    } catch (e) { setSaving(btn, false); }
+  });
+
+  document.getElementById('bkam-reset').addEventListener('click', async function() {
+    var btn = document.getElementById('bkam-save'); setSaving(btn, true);
+    try {
+      var entries = bkamBcRates.map(function(r) { return { code: r.code, bkamRef: '' }; });
+      await apiFetch('/api/widgets/tableau-change/overrides', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ overrides: entries }),
+      });
+      close();
+    } catch (e) { setSaving(btn, false); }
+  });
+
+  document.getElementById('bkam-cancel').addEventListener('click', close);
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+
+  loaded['style'] = true;
+  initStyle();
+
+})();
+</script>
+</body>
+</html>

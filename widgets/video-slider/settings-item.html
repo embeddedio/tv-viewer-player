@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Config — Vidéo Slider</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #152238;
+      --accent: #0ea5e9;
+      --border: #e5e7eb;
+      --text: #1f2937;
+      --text-dim: #6b7280;
+      --bg: #f9fafb;
+    }
+    html, body {
+      height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px; color: var(--text); background: #fff; overflow: hidden;
+    }
+    #app { display: flex; flex-direction: column; height: 100%; }
+
+    #header {
+      background: var(--navy); padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    #header h1 { color: #fff; font-size: 0.95rem; font-weight: 700; }
+    #header p  { color: rgba(255,255,255,0.45); font-size: 0.65rem; margin-top: 3px; }
+    #close-btn {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.6); font-size: 1.3rem; line-height: 1;
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #close-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+    #body { flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 0; background: var(--bg); overflow-y: auto; }
+
+    .section { margin-bottom: 24px; }
+    .section-label {
+      font-size: 0.62rem; font-weight: 800; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .radio-option { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.88rem; }
+    .radio-option input[type=radio] { accent-color: var(--navy); cursor: pointer; }
+
+    .folder-list {
+      margin-top: 12px; padding: 12px; background: #fff;
+      border: 1px solid var(--border); border-radius: 8px;
+      display: flex; flex-direction: column; gap: 6px;
+      max-height: 200px; overflow-y: auto;
+    }
+    .folder-list.hidden { display: none; }
+    .folder-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer; }
+    .folder-item input[type=checkbox] { accent-color: var(--navy); cursor: pointer; }
+    .folder-empty { font-size: 0.8rem; color: var(--text-dim); padding: 4px 0; }
+
+    .toggle-row {
+      display: flex; align-items: center; gap: 10px; margin-top: 16px;
+      padding: 12px 14px; background: #fff; border: 1px solid var(--border); border-radius: 8px;
+      cursor: pointer;
+    }
+    .toggle-row input[type=checkbox] { accent-color: var(--navy); width: 16px; height: 16px; cursor: pointer; }
+    .toggle-row .toggle-label { font-size: 0.88rem; font-weight: 600; color: var(--text); flex: 1; }
+    .toggle-row .toggle-hint  { font-size: 0.72rem; color: var(--text-dim); }
+
+    .info-box {
+      font-size: 0.78rem; color: var(--text-dim); padding: 12px 14px;
+      background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px;
+      margin-top: 12px; line-height: 1.6;
+    }
+
+    #footer {
+      padding: 14px 24px; border-top: 1px solid var(--border); background: #fff;
+      display: flex; justify-content: flex-end; gap: 8px; flex-shrink: 0;
+    }
+    .btn { padding: 9px 22px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; }
+    .btn-cancel { background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); }
+    .btn-cancel:hover { background: #f3f4f6; }
+    .btn-save { background: var(--navy); color: #fff; }
+    .btn-save:hover { background: #1e3a5f; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <div>
+      <h1>🎬 Configuration — Vidéo Slider</h1>
+      <p>Paramètres spécifiques à cet item</p>
+    </div>
+    <button id="close-btn" title="Fermer">&#x2715;</button>
+  </div>
+
+  <div id="body">
+
+    <div class="section">
+      <div class="section-label">Source des vidéos</div>
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="source-mode" value="all" id="src-all" checked />
+          Toute la médiathèque
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="source-mode" value="folders" id="src-folders" />
+          Dossier(s) spécifique(s)
+        </label>
+      </div>
+      <div class="folder-list hidden" id="folder-list">
+        <span class="folder-empty">Chargement…</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Audio</div>
+      <label class="toggle-row">
+        <input type="checkbox" id="muted" />
+        <span class="toggle-label">Muet (mute)</span>
+        <span class="toggle-hint">Toutes les vidéos seront sans son</span>
+      </label>
+    </div>
+
+    <div class="info-box">
+      Les vidéos s'enchaînent automatiquement à la fin de chaque lecture. La durée affichée dans la zone de planification est ignorée — chaque vidéo joue jusqu'à sa fin.
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <button class="btn btn-cancel" id="cancel-btn">Annuler</button>
+    <button class="btn btn-save" id="save-btn">Enregistrer</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+
+  var sourcesRaw = params.get('sources');
+  var currentSources = 'all';
+  try {
+    if (sourcesRaw && sourcesRaw !== 'all') {
+      currentSources = JSON.parse(sourcesRaw);
+    }
+  } catch (e) {}
+
+  var isMuted = params.get('videoMuted') === 'true';
+  document.getElementById('muted').checked = isMuted;
+
+  var isAllMode = currentSources === 'all' || !Array.isArray(currentSources);
+  document.getElementById('src-all').checked     = isAllMode;
+  document.getElementById('src-folders').checked = !isAllMode;
+
+  var folderList = document.getElementById('folder-list');
+  if (!isAllMode) folderList.classList.remove('hidden');
+
+  document.querySelectorAll('input[name=source-mode]').forEach(function (radio) {
+    radio.addEventListener('change', function () {
+      if (this.value === 'folders') {
+        folderList.classList.remove('hidden');
+      } else {
+        folderList.classList.add('hidden');
+      }
+    });
+  });
+
+  fetch('/folders')
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var folders = data.folders || data || [];
+      folderList.innerHTML = '';
+      if (!folders.length) {
+        folderList.innerHTML = '<span class="folder-empty">Aucun dossier disponible</span>';
+        return;
+      }
+      folders.forEach(function (folder) {
+        var name = typeof folder === 'string' ? folder : folder.name;
+        var checked = Array.isArray(currentSources) && currentSources.includes(name);
+        var label = document.createElement('label');
+        label.className = 'folder-item';
+        label.innerHTML =
+          '<input type="checkbox" value="' + name + '"' + (checked ? ' checked' : '') + ' />' +
+          '📁 ' + name;
+        folderList.appendChild(label);
+      });
+    })
+    .catch(function () {
+      folderList.innerHTML = '<span class="folder-empty">Erreur chargement dossiers</span>';
+    });
+
+  function close() {
+    window.parent.postMessage({ type: 'widget-settings-close' }, '*');
+  }
+
+  document.getElementById('close-btn').addEventListener('click', close);
+  document.getElementById('cancel-btn').addEventListener('click', close);
+
+  document.getElementById('save-btn').addEventListener('click', function () {
+    var mode = document.querySelector('input[name=source-mode]:checked').value;
+    var sources;
+    if (mode === 'all') {
+      sources = 'all';
+    } else {
+      sources = Array.from(folderList.querySelectorAll('input[type=checkbox]:checked'))
+        .map(function (cb) { return cb.value; });
+    }
+
+    window.parent.postMessage({
+      type:        'widget-sidebar-save',
+      sources:     sources,
+      videoMuted:  document.getElementById('muted').checked,
+    }, '*');
+    close();
+  });
+})();
+</script>
+</body>
+</html>

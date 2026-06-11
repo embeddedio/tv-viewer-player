@@ -1,0 +1,9 @@
+{
+  "type": "message-marquee",
+  "label": "Message Défilant",
+  "icon": "📢",
+  "dataSource": { "url": "/api/widgets/message-marquee" },
+  "settingsPages": {
+    "item": "/widgets/message-marquee/settings-item.html"
+  }
+}

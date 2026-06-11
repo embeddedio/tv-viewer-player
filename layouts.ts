@@ -76,9 +76,14 @@ export interface ZoneWidgetItem {
   speed?: number;
   logoWidth?: number;
   headerHeight?: number;
-  fontScale?: number;    // multiplicateur police (défaut 1.0)
-  logoSize?: number;     // taille logo en % (défaut 100)
-  headerWeight?: number; // poids header en unités-ligne (défaut 2.5)
+  fontScale?: number;       // multiplicateur police (défaut 1.0)
+  logoSize?: number;        // taille logo en % (défaut 100)
+  headerWeight?: number;    // poids header en unités-ligne (défaut 2.5)
+  sources?: 'all' | string[]; // image-slider / video-slider : dossiers sources
+  slideDuration?: number;     // image-slider : durée par image en secondes (défaut 6)
+  animation?: string;         // image-slider : type d'animation (left/right/up/down/fade)
+  videoMuted?: boolean;       // video-slider : muet (défaut false)
+  city?: string;              // meteo : nom de ville (défaut "Tanger")
 }
 
 export type ZoneItem = ZoneMediaItem | ZoneWidgetItem;

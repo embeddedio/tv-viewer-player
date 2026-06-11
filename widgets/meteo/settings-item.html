@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paramètres Météo</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; min-height: 100vh; }
+  h2 { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 20px; }
+  .field { margin-bottom: 16px; }
+  label { display: block; font-size: 13px; color: #aaa; margin-bottom: 6px; }
+  input[type="text"], select {
+    width: 100%; padding: 9px 12px; border-radius: 6px;
+    border: 1px solid #333; background: #0d0d1a; color: #fff;
+    font-size: 14px; outline: none;
+  }
+  input[type="text"]:focus, select:focus { border-color: #4a9eff; }
+  .suggestions {
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: #1a1a2e; border: 1px solid #333; border-top: none;
+    border-radius: 0 0 6px 6px; z-index: 10; max-height: 160px; overflow-y: auto;
+  }
+  .suggestions div { padding: 8px 12px; cursor: pointer; font-size: 13px; }
+  .suggestions div:hover { background: #252545; }
+  .input-wrap { position: relative; }
+  .actions { display: flex; gap: 10px; margin-top: 24px; }
+  button {
+    flex: 1; padding: 10px; border-radius: 6px; border: none;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .btn-save { background: #4a9eff; color: #fff; }
+  .btn-save:hover { background: #3a8eef; }
+  .btn-cancel { background: #2a2a3e; color: #aaa; }
+  .btn-cancel:hover { background: #333355; }
+</style>
+</head>
+<body>
+<h2>Paramètres Météo</h2>
+
+<div class="field">
+  <label>Ville</label>
+  <div class="input-wrap">
+    <input type="text" id="city" placeholder="ex: Tanger, Casablanca…" autocomplete="off">
+    <div class="suggestions" id="suggestions" style="display:none"></div>
+  </div>
+</div>
+
+<div class="field">
+  <label>Thème</label>
+  <select id="theme">
+    <option value="stratum-dark">🌙 Sombre (stratum-dark)</option>
+    <option value="stratum-light">☀️ Clair (stratum-light)</option>
+  </select>
+</div>
+
+<div class="actions">
+  <button class="btn-cancel" onclick="close()">Annuler</button>
+  <button class="btn-save" onclick="save()">Enregistrer</button>
+</div>
+
+<script>
+var CITIES = [
+  'Tanger','Casablanca','Rabat','Fès','Marrakech','Agadir','Meknès','Oujda',
+  'Kénitra','Tétouan','Safi','Mohammedia','Khouribga','El Jadida','Béni Mellal',
+  'Nador','Taza','Settat','Berrechid','Khémisset','Inezgane','Larache','Ksar el-Kébir',
+  'Guelmim','Dakhla','Laâyoune','Tikiwin'
+];
+
+var p = new URLSearchParams(window.location.search);
+document.getElementById('city').value  = p.get('city')  || 'Tanger';
+document.getElementById('theme').value = p.get('theme') || 'stratum-dark';
+
+var cityInput = document.getElementById('city');
+var suggestionsEl = document.getElementById('suggestions');
+
+cityInput.addEventListener('input', function() {
+  var val = this.value.trim().toLowerCase();
+  if (!val) { suggestionsEl.style.display = 'none'; return; }
+  var matches = CITIES.filter(function(c) { return c.toLowerCase().startsWith(val); });
+  if (!matches.length) { suggestionsEl.style.display = 'none'; return; }
+  suggestionsEl.innerHTML = matches.map(function(c) {
+    return '<div onclick="pick(\'' + c + '\')">' + c + '</div>';
+  }).join('');
+  suggestionsEl.style.display = 'block';
+});
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.input-wrap')) suggestionsEl.style.display = 'none';
+});
+
+function pick(c) {
+  cityInput.value = c;
+  suggestionsEl.style.display = 'none';
+}
+
+function save() {
+  var city  = document.getElementById('city').value.trim() || 'Tanger';
+  var theme = document.getElementById('theme').value;
+  window.parent.postMessage({ type: 'widget-sidebar-save', city: city, theme: theme }, '*');
+}
+
+function close() {
+  window.parent.postMessage({ type: 'widget-settings-close' }, '*');
+}
+</script>
+</body>
+</html>

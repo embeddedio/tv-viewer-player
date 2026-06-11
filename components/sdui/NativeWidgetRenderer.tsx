@@ -4,6 +4,13 @@ import type { BindingContext } from './types';
 import type { ZoneWidgetItem } from '../../layouts';
 import { useWidgetData } from './useWidgetData';
 import { renderNode } from './componentRegistry';
+import ImageSlider from '../../widgets/ImageSlider/ImageSlider';
+import VideoSlider from '../../widgets/VideoSlider/VideoSlider';
+
+const NATIVE_WIDGETS: Record<string, React.ComponentType<{ baseUrl: string }>> = {
+  'image-slider': ImageSlider,
+  'video-slider': VideoSlider,
+};
 
 interface NativeWidgetRendererProps {
   baseUrl: string;
@@ -13,6 +20,17 @@ interface NativeWidgetRendererProps {
 }
 
 function NativeWidgetRenderer({ baseUrl, widgetType, widgetItem, fallback }: NativeWidgetRendererProps) {
+  const NativeComp = NATIVE_WIDGETS[widgetType];
+  if (NativeComp) return (
+    <NativeComp
+      baseUrl={baseUrl}
+      sources={(widgetItem as any).sources}
+      slideDuration={(widgetItem as any).slideDuration}
+      animation={(widgetItem as any).animation}
+      videoMuted={(widgetItem as any).videoMuted}
+    />
+  );
+
   const { uiDef, data, sources, loading, error, layout, onLayout, computed } = useWidgetData(
     baseUrl,
     widgetType,

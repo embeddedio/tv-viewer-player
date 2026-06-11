@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Type — Tableau de Change</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #152238;
+      --accent: #0ea5e9;
+      --border: #e5e7eb;
+      --text: #1f2937;
+      --text-dim: #6b7280;
+      --bg: #f9fafb;
+    }
+    html, body {
+      height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px; color: var(--text); background: #fff; overflow: hidden;
+    }
+
+    #app { display: flex; flex-direction: column; height: 100%; }
+
+    /* Header */
+    #header {
+      background: var(--navy); padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    #header h1 { color: #fff; font-size: 0.95rem; font-weight: 700; }
+    #header p  { color: rgba(255,255,255,0.45); font-size: 0.65rem; margin-top: 3px; }
+    #close-btn {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.6); font-size: 1.3rem; line-height: 1;
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #close-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+    /* Body */
+    #body { flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 0; background: var(--bg); overflow-y: auto; }
+
+    /* Section */
+    .section { margin-bottom: 24px; }
+    .section-label {
+      font-size: 0.62rem; font-weight: 800; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* Grid layouts */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-1 { display: grid; grid-template-columns: 1fr; max-width: 340px; gap: 16px; }
+
+    /* Field */
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label { font-size: 0.75rem; font-weight: 600; color: #374151; }
+    .field select, .field input[type=number] {
+      padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+      background: #fff; font-size: 0.88rem; color: var(--text);
+      transition: border-color .15s; outline: none; width: 100%;
+    }
+    .field select {
+      cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' viewBox='0 0 12 8'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m1 1 5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px;
+    }
+    .field select:focus, .field input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(21,34,56,.07); }
+    .field .hint { font-size: 0.65rem; color: var(--text-dim); line-height: 1.4; }
+
+    /* Adjustments note */
+    .adj-note {
+      font-size: 0.7rem; color: var(--text-dim); padding: 10px 14px;
+      background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px;
+      margin-top: 4px; line-height: 1.5;
+    }
+
+    /* Footer */
+    #footer {
+      padding: 14px 24px; border-top: 1px solid var(--border); background: #fff;
+      display: flex; justify-content: flex-end; gap: 8px; flex-shrink: 0;
+    }
+    .btn { padding: 9px 22px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; }
+    .btn-cancel { background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); }
+    .btn-cancel:hover { background: #f3f4f6; }
+    .btn-save { background: var(--navy); color: #fff; }
+    .btn-save:hover { background: #1e3a5f; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <div>
+      <h1>⚙️ Configuration de l'item</h1>
+      <p>Tableau de Change — paramètres spécifiques à cet item</p>
+    </div>
+    <button id="close-btn" title="Fermer">&#x2715;</button>
+  </div>
+
+  <div id="body">
+
+    <!-- Type + Thème -->
+    <div class="section">
+      <div class="section-label">Affichage</div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Type de données</label>
+          <select id="variant-select">
+            <option value="simple">💱 Change (Achat / Vente)</option>
+            <option value="bkam">🏛️ BKAM (Référence officielle)</option>
+            <option value="combined">🏦 Combiné (Change + BKAM)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Thème visuel</label>
+          <select id="theme-select">
+            <option value="default">🎨 Défaut (classique)</option>
+            <option value="vertical-dark">🌑 Vertical Dark</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Micro-overrides -->
+    <div class="section">
+      <div class="section-label">Ajustements visuels</div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Échelle de police</label>
+          <input type="number" id="font-scale" min="0.1" max="5" step="0.1" placeholder="Valeur globale" />
+          <span class="hint">Laisser vide pour utiliser le style global</span>
+        </div>
+        <div class="field">
+          <label>Taille du logo (%)</label>
+          <input type="number" id="logo-size" min="5" max="200" step="5" placeholder="Valeur globale" />
+          <span class="hint">Laisser vide pour utiliser le style global</span>
+        </div>
+      </div>
+      <div class="adj-note">
+        Ces ajustements s'appliquent uniquement à <strong>cet item</strong>.
+        Le style global reste inchangé pour les autres items du même widget.
+      </div>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <button class="btn btn-cancel" id="cancel-btn">Annuler</button>
+    <button class="btn btn-save" id="save-btn">Enregistrer</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var params  = new URLSearchParams(window.location.search);
+  var variant = params.get('variant')   || 'simple';
+  var theme   = params.get('theme')     || 'default';
+  var fs      = params.get('fontScale');
+  var ls      = params.get('logoSize');
+
+  document.getElementById('variant-select').value = variant;
+  document.getElementById('theme-select').value   = theme;
+  if (fs) document.getElementById('font-scale').value = fs;
+  if (ls) document.getElementById('logo-size').value  = ls;
+
+  function close() {
+    window.parent.postMessage({ type: 'widget-settings-close' }, '*');
+  }
+
+  document.getElementById('close-btn').addEventListener('click', close);
+  document.getElementById('cancel-btn').addEventListener('click', close);
+
+  document.getElementById('save-btn').addEventListener('click', function () {
+    var msg = {
+      type:    'widget-sidebar-save',
+      variant: document.getElementById('variant-select').value,
+      theme:   document.getElementById('theme-select').value,
+    };
+    var fsVal = document.getElementById('font-scale').value;
+    var lsVal = document.getElementById('logo-size').value;
+    if (fsVal !== '') msg.fontScale = parseFloat(fsVal);
+    if (lsVal !== '') msg.logoSize  = parseFloat(lsVal);
+    window.parent.postMessage(msg, '*');
+    close();
+  });
+})();
+</script>
+</body>
+</html>

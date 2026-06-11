@@ -1,0 +1,10 @@
+{
+  "sections": [
+    {
+      "title": "Défilement",
+      "fields": [
+        { "key": "fontScale", "label": "Vitesse du défilement (×)", "step": 0.1, "hint": "défaut : 1.0 — plus grand = plus rapide" }
+      ]
+    }
+  ]
+}

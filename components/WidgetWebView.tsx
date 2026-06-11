@@ -16,6 +16,7 @@ function WidgetWebView({ baseUrl, widgetType, widgetItem }: WidgetWebViewProps) 
   if (widgetItem?.fontScale)   params.set('fontScale',   String(widgetItem.fontScale));
   if (widgetItem?.logoSize)    params.set('logoSize',    String(widgetItem.logoSize));
   if (widgetItem?.headerWeight) params.set('headerWeight', String(widgetItem.headerWeight));
+  if (widgetItem?.city)         params.set('city',         widgetItem.city);
   const qs  = params.toString();
   const uri = `${baseUrl}/widgets/${widgetType}/${qs ? '?' + qs : ''}`;
 

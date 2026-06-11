@@ -68,7 +68,8 @@ export default function App() {
   const [tickerConfig, setTickerConfig] = useState<TickerConfig>(DEFAULT_TICKER_CONFIG);
   const [logoInfo, setLogoInfo] = useState<{ url: string; name: string } | null>(null);
   const [rotation, setRotation] = useState("landscape-left");
-  const [screenDims, setScreenDims] = useState(Dimensions.get("window"));
+  // 'screen' inclut la zone nav bar (plein écran physique) — nécessaire en mode immersif kiosk
+  const [screenDims, setScreenDims] = useState(Dimensions.get("screen"));
   const [nodeError, setNodeError] = useState<string | null>(nodejsBootstrapError);
   const [splashDone, setSplashDone] = useState(false);
   const [serverReady, setServerReady] = useState(false);
@@ -127,7 +128,7 @@ export default function App() {
 
   // --- Screen dimensions ---
   useEffect(() => {
-    const sub = Dimensions.addEventListener("change", ({ window }) => setScreenDims(window));
+    const sub = Dimensions.addEventListener("change", ({ screen }) => setScreenDims(screen));
     return () => sub?.remove();
   }, []);
 
@@ -344,6 +345,11 @@ export default function App() {
   // Ref pour éviter les stale closures dans le bridge listener
   rotationRef.current = rotation;
 
+  // Re-cache les barres système à chaque changement d'orientation (portrait ↔ paysage)
+  useEffect(() => {
+    NativeModules.SystemUI?.hideSystemBars?.();
+  }, [rotation]);
+
   // --- Rotation style ---
   const layoutStyle = (() => {
     const { width, height } = screenDims;
@@ -550,8 +556,8 @@ const styles = StyleSheet.create({
   offscreen: {
     position: 'absolute',
     top: 0,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height,
     backgroundColor: '#030712',
   },
 });

@@ -1,0 +1,17 @@
+{
+  "sections": [
+    {
+      "title": "Apparence",
+      "fields": [
+        { "key": "fontSize",  "label": "Taille du texte (px)",        "step": 1,   "hint": "défaut : 24" },
+        { "key": "speed",     "label": "Vitesse du défilement (×)",   "step": 0.1, "hint": "défaut : 1.0" }
+      ]
+    },
+    {
+      "title": "Sens de défilement",
+      "fields": [
+        { "key": "direction", "label": "Direction (ltr / rtl)",        "step": null, "hint": "ltr = gauche→droite  |  rtl = droite→gauche" }
+      ]
+    }
+  ]
+}
