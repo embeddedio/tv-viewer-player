@@ -36,12 +36,12 @@ export default function ZoneItemRow({ item, index, onRemove, onDuration, onMuted
       )}
       <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">{name}</span>
 
-      {/* ⚙️ — type/variante widget (sidebar settings) */}
-      {isWidget && onEditWidgetSidebar && (
+      {/* ⚙️ — réglages par zone (uniquement si le widget déclare settingsPages.item) */}
+      {isWidget && widget?.settingsPages?.item && onEditWidgetSidebar && (
         <button
           onClick={(e) => { e.stopPropagation(); onEditWidgetSidebar(index); }}
           className="w-7 h-7 flex items-center justify-center bg-white/5 border border-border text-text-dim cursor-pointer text-sm rounded-md hover:bg-accent/10 hover:text-accent hover:border-accent/30 shrink-0"
-          title="Type / variante"
+          title="Configurer"
         >
           &#9881;
         </button>
@@ -84,17 +84,6 @@ export default function ZoneItemRow({ item, index, onRemove, onDuration, onMuted
           onClick={(e) => { e.stopPropagation(); onEditMessages(index); }}
           className="w-7 h-7 flex items-center justify-center bg-white/5 border border-border text-text-dim cursor-pointer text-sm rounded-md hover:bg-accent/10 hover:text-accent hover:border-accent/30 shrink-0"
           title="Configurer les messages"
-        >
-          &#9881;
-        </button>
-      )}
-
-      {/* ⚙️ — paramètres visuels widget */}
-      {isWidget && onEditWidgetStyle && (
-        <button
-          onClick={(e) => { e.stopPropagation(); onEditWidgetStyle(index); }}
-          className="w-7 h-7 flex items-center justify-center bg-white/5 border border-border text-text-dim cursor-pointer text-sm rounded-md hover:bg-accent/10 hover:text-accent hover:border-accent/30 shrink-0"
-          title="Paramètres visuels"
         >
           &#9881;
         </button>

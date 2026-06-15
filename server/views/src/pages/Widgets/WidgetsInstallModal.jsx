@@ -32,7 +32,12 @@ export default function WidgetsInstallModal({ onClose, onInstalled }) {
     try {
       const r = await installWidget(file);
       if (r?.success) {
-        showAlert(`Widget "${r.widget?.label || file.name}" installé`);
+        const list = r.widgets || (r.widget ? [r.widget] : []);
+        if (list.length > 1) {
+          showAlert(`${list.length} widgets installés : ${list.map((w) => w.label).join(', ')}`);
+        } else {
+          showAlert(`Widget "${list[0]?.label || file.name}" installé`);
+        }
         onInstalled();
         onClose();
       } else {

@@ -395,11 +395,13 @@ const server = http.createServer(async (req, res) => {
         const body = await readRequestBody(req);
         const payload = JSON.parse(body.toString('utf-8'));
         if (!payload.name || !payload.data) return sendJson(res, { message: 'Paramètres manquants (name, data)' }, 400);
-        const { installWidget } = require('./lib/widget-install');
-        const manifest = installWidget(payload.data, widgetsStoragePath);
+        const { installWidgets } = require('./lib/widget-install');
+        // Gère un widget seul OU un ZIP groupé (plusieurs widgets)
+        const manifests = installWidgets(payload.data, widgetsStoragePath);
         loadWidgetApiRoutes();
-        sendToApp('widget-update', { widgetType: manifest.type, scope: 'all' });
-        return sendJson(res, { success: true, widget: manifest });
+        for (const m of manifests) sendToApp('widget-update', { widgetType: m.type, scope: 'all' });
+        // Compat : `widget` = 1er installé ; `widgets` = liste complète
+        return sendJson(res, { success: true, widget: manifests[0], widgets: manifests });
       } catch (e) {
         return sendJson(res, { message: e.message || 'Erreur installation' }, 422);
       }

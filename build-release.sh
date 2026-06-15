@@ -13,7 +13,7 @@ set -e
 # --- Config (surchargeable par variables d'env) ---
 ADB="${ADB:-$HOME/Android/Sdk/platform-tools/adb}"
 DEVICE="${1:-${DEVICE:-10.42.0.99:5555}}"
-PACKAGE="${PACKAGE:-com.tvviewer.dev}"
+PACKAGE="${PACKAGE:-com.tvviewer.app}"
 APK="android/app/build/outputs/apk/release/app-release.apk"
 
 # adb du PATH en repli si le chemin par défaut n'existe pas

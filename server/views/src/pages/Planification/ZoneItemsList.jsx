@@ -69,7 +69,9 @@ export default function ZoneItemsList({ seq, selectedZoneId, isAudioZone, onSave
   useEffect(() => {
     const handler = (e) => {
       if (e.data?.type === 'widget-sidebar-save' && editingSidebarIdx !== null) {
-        handleUpdateItem(editingSidebarIdx, { variant: e.data.variant, theme: e.data.theme });
+        // Récupère TOUS les champs envoyés par le widget (sources, slideDuration, animation, variant, theme…)
+        const { type, ...updates } = e.data;
+        handleUpdateItem(editingSidebarIdx, updates);
       }
       if (e.data?.type === 'widget-settings-close') closeSidebar();
     };
@@ -83,8 +85,13 @@ export default function ZoneItemsList({ seq, selectedZoneId, isAudioZone, onSave
     const manifest = allWidgets.find(w => w.type === item.widgetType);
     const sidebarPage = manifest?.settingsPages?.item;
     if (!sidebarPage) return;
-    const params = new URLSearchParams({ variant: item.variant || 'simple', theme: item.theme || 'default' });
-    setSidebarUrl(`${sidebarPage}?${params}`);
+    // Passe TOUS les réglages de l'item en params URL (sources, slideDuration, animation, variant, theme…)
+    const p = {};
+    Object.entries(item).forEach(([k, v]) => {
+      if (v == null) return;
+      p[k] = typeof v === 'object' ? JSON.stringify(v) : String(v);
+    });
+    setSidebarUrl(`${sidebarPage}?${new URLSearchParams(p)}`);
     setEditingSidebarIdx(idx);
   }, [items, allWidgets]);
 

@@ -154,7 +154,7 @@ export default function SourceSidebar({ mediaFiles, seq, selectedZoneId, isAudio
           <div key={w.type} className="flex items-center gap-2 p-2 rounded-md mb-1 text-xs border border-transparent hover:bg-white/5 hover:border-border transition-all">
             <span className="text-lg">{w.icon}</span>
             <span className="flex-1">{w.label}</span>
-            {onWidgetSettings && (
+            {onWidgetSettings && w.settingsPages?.widget && (
               <button
                 onClick={() => onWidgetSettings(w.type)}
                 className="w-7 h-7 flex items-center justify-center bg-white/5 border border-border text-text-dim cursor-pointer text-sm rounded-md hover:bg-accent/10 hover:text-accent hover:border-accent/30 shrink-0"

@@ -1,26 +1,29 @@
 {
   "sections": [
     {
-      "title": "Zone Header",
+      "title": "Zone logo & titre",
       "fields": [
-        { "key": "headerWeight",    "label": "Hauteur header (lignes)", "step": 0.5, "hint": "défaut : 3.5 lignes" },
-        { "key": "logoWidthPct",    "label": "Largeur zone logo (%)",   "step": 1,   "hint": "défaut : 21%" },
-        { "key": "titleFontPx",     "label": "Taille titre (px)",       "step": 1,   "hint": "0 = auto" }
+        { "key": "logoWidthPct", "label": "Largeur zone logo (%)",       "step": 1,   "hint": "défaut : 21%" },
+        { "key": "headerWeight", "label": "Hauteur zone header (lignes)", "step": 0.5, "hint": "défaut : 3.5" },
+        { "key": "titleFontPx",  "label": "Taille du titre (px)",         "step": 1,   "hint": "0 = auto" }
       ]
     },
     {
-      "title": "En-têtes du tableau",
+      "title": "Colonnes du tableau",
       "fields": [
-        { "key": "colUnitePct",     "label": "Largeur col. Unité (%)",   "step": 1,   "hint": "défaut : 10%" },
-        { "key": "colValPct",       "label": "Largeur col. Valeurs (%)", "step": 1,   "hint": "défaut : 15%" },
-        { "key": "colHeaderFontPx", "label": "Police en-têtes (px)",     "step": 1,   "hint": "0 = auto" }
+        { "key": "colUnitePct",     "label": "Largeur col. Unité (%)",        "step": 1, "hint": "défaut : 10%" },
+        { "key": "colValPct",       "label": "Largeur col. Achat/Vente (%)",  "step": 1, "hint": "défaut : 15%" },
+        { "key": "colHeaderFontPx", "label": "Taille en-têtes colonnes (px)", "step": 1, "hint": "0 = auto" }
       ]
     },
     {
-      "title": "Lignes de données",
+      "title": "Tailles des valeurs (lignes)",
       "fields": [
-        { "key": "rowFontPx",  "label": "Police valeurs (px)",    "step": 1,   "hint": "0 = auto" },
-        { "key": "fontScale",  "label": "Échelle police globale", "step": 0.1, "hint": "0 = auto (1.0×)" }
+        { "key": "rowUnitFontPx", "label": "Taille Unité (px)",               "step": 1,   "hint": "0 = auto" },
+        { "key": "rowFlagPx",     "label": "Taille logo devise (px)",         "step": 1,   "hint": "0 = auto" },
+        { "key": "rowNameFontPx", "label": "Taille nom devise (px)",          "step": 1,   "hint": "0 = auto" },
+        { "key": "rowValFontPx",  "label": "Taille valeurs Achat/Vente (px)", "step": 1,   "hint": "0 = auto" },
+        { "key": "fontScale",     "label": "Échelle globale (×)",             "step": 0.1, "hint": "0 = auto (1.0×)" }
       ]
     }
   ]
