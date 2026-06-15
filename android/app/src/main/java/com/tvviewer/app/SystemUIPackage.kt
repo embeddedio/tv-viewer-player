@@ -1,14 +1,14 @@
-package com.ehyoussef.tvviewerdev
+package com.tvviewer.app
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ViewManager
 
-class StoragePackage : ReactPackage {
+class SystemUIPackage : ReactPackage {
     override fun createNativeModules(
         reactContext: ReactApplicationContext
-    ): List<NativeModule> = listOf(StorageModule(reactContext))
+    ): List<NativeModule> = listOf(SystemUIModule(reactContext))
 
     override fun createViewManagers(
         reactContext: ReactApplicationContext

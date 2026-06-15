@@ -6,6 +6,7 @@ const pages = [
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'planification', label: 'Planification' },
   { id: 'medias', label: 'Medias' },
+  { id: 'widgets', label: 'Widgets' },
   { id: 'configuration', label: 'Configuration' },
 ];
 

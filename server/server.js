@@ -386,6 +386,41 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, LAYOUT_TEMPLATES);
     }
 
+    // --- Installation / suppression widgets (admin) ---
+
+    if (req.method === 'POST' && pathname === '/api/widgets/install') {
+      if (!requireAuth(req)) return sendJson(res, { message: 'Non authentifié' }, 401);
+      if (!widgetsStoragePath) return sendJson(res, { message: 'Stockage widgets non initialisé' }, 503);
+      try {
+        const body = await readRequestBody(req);
+        const payload = JSON.parse(body.toString('utf-8'));
+        if (!payload.name || !payload.data) return sendJson(res, { message: 'Paramètres manquants (name, data)' }, 400);
+        const { installWidget } = require('./lib/widget-install');
+        const manifest = installWidget(payload.data, widgetsStoragePath);
+        loadWidgetApiRoutes();
+        sendToApp('widget-update', { widgetType: manifest.type, scope: 'all' });
+        return sendJson(res, { success: true, widget: manifest });
+      } catch (e) {
+        return sendJson(res, { message: e.message || 'Erreur installation' }, 422);
+      }
+    }
+
+    if (req.method === 'DELETE' && pathname.match(/^\/api\/widgets\/[^\/]+$/)) {
+      if (!requireAuth(req)) return sendJson(res, { message: 'Non authentifié' }, 401);
+      if (!widgetsStoragePath) return sendJson(res, { message: 'Stockage widgets non initialisé' }, 503);
+      const widgetType = pathname.split('/')[3];
+      const widgetDir = path.join(widgetsStoragePath, widgetType);
+      if (!fs.existsSync(widgetDir)) return sendJson(res, { message: 'Widget non trouvé' }, 404);
+      try {
+        fs.rmSync(widgetDir, { recursive: true, force: true });
+        delete widgetApiHandlers[widgetType];
+        sendToApp('widget-update', { widgetType, scope: 'deleted' });
+        return sendJson(res, { success: true });
+      } catch (e) {
+        return sendJson(res, { message: e.message || 'Erreur suppression' }, 500);
+      }
+    }
+
     // Routes API dynamiques des widgets (chargées depuis api.js de chaque widget)
     // Les routes /style sont gérées avant ce bloc — elles n'arrivent pas ici
     if (pathname.startsWith('/api/widgets/') && !pathname.match(/^\/api\/widgets\/[^\/]+\/style$/)) {

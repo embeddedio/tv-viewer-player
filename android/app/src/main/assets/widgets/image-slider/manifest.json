@@ -1,0 +1,9 @@
+{
+  "type": "image-slider",
+  "label": "Image Slider",
+  "icon": "🖼️",
+  "native": true,
+  "settingsPages": {
+    "item": "/widgets/image-slider/settings-item.html"
+  }
+}

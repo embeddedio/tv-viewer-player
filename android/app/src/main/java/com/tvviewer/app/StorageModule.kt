@@ -1,6 +1,7 @@
-package com.ehyoussef.tvviewerdev
+package com.tvviewer.app
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -40,15 +41,19 @@ class StorageModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun hasAccess(promise: Promise) {
         try {
-            // Sur Android 11+ (API 30), MANAGE_EXTERNAL_STORAGE est obligatoire.
-            // Cette permission survive à la réinstallation : une fois accordée,
-            // l'app peut lire/écrire les fichiers créés par l'ancien UID.
             val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // Android 11+ : MANAGE_EXTERNAL_STORAGE obligatoire
                 val isManager = Environment.isExternalStorageManager()
                 Log.d(TAG, "hasAccess: isExternalStorageManager=$isManager")
                 isManager
             } else {
-                true
+                // Android 9/10 : vérifier WRITE_EXTERNAL_STORAGE (permission runtime dangereuse)
+                val perm = reactApplicationContext.checkSelfPermission(
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+                val ok = perm == PackageManager.PERMISSION_GRANTED
+                Log.d(TAG, "hasAccess: WRITE_EXTERNAL_STORAGE granted=$ok (API=${Build.VERSION.SDK_INT})")
+                ok
             }
             promise.resolve(granted)
         } catch (e: Exception) {
@@ -59,10 +64,11 @@ class StorageModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun requestAccess(promise: Promise) {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                val pkg = reactApplicationContext.packageName
-                val pm = reactApplicationContext.packageManager
+            val pkg = reactApplicationContext.packageName
+            val pm = reactApplicationContext.packageManager
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // Android 11+ : ouvrir MANAGE_ALL_FILES_ACCESS
                 val intent1 = Intent(
                     Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
                     Uri.parse("package:$pkg")
@@ -91,6 +97,13 @@ class StorageModule(reactContext: ReactApplicationContext) :
                     else ->
                         reactApplicationContext.startActivity(intent4)
                 }
+            } else {
+                // Android 9/10 : ouvrir la page des permissions de l'app dans les réglages
+                val intent = Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:$pkg")
+                ).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
+                reactApplicationContext.startActivity(intent)
             }
             promise.resolve(true)
         } catch (e: Exception) {
@@ -247,6 +260,36 @@ class StorageModule(reactContext: ReactApplicationContext) :
         } catch (e: Exception) {
             Log.e(TAG, "saveImageBase64: FAILED $filename: ${e.message}", e)
             promise.reject("SAVE_IMAGE_FAILED", e.message, e)
+        }
+    }
+
+    @ReactMethod
+    fun seedDefaultWidgets(widgetsStoragePath: String, promise: Promise) {
+        try {
+            val am = reactApplicationContext.assets
+            val widgetTypes = am.list("widgets") ?: emptyArray()
+            var seeded = 0
+            for (type in widgetTypes) {
+                val dest = File(widgetsStoragePath, type)
+                if (dest.exists()) continue
+                copyAssetDir(am, "widgets/$type", dest)
+                seeded++
+            }
+            Log.d(TAG, "seedDefaultWidgets: seeded=$seeded")
+            promise.resolve(seeded)
+        } catch (e: Exception) {
+            Log.e(TAG, "seedDefaultWidgets: FAILED: ${e.message}", e)
+            promise.reject("SEED_FAILED", e.message, e)
+        }
+    }
+
+    private fun copyAssetDir(am: android.content.res.AssetManager, assetPath: String, dest: File) {
+        val children = am.list(assetPath) ?: emptyArray()
+        if (children.isEmpty()) {
+            am.open(assetPath).use { input -> FileOutputStream(dest).use { input.copyTo(it) } }
+        } else {
+            dest.mkdirs()
+            for (child in children) copyAssetDir(am, "$assetPath/$child", File(dest, child))
         }
     }
 

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ActivityIndicator, AppState, Image, LogBox, NativeModules, StyleSheet, Text, TouchableOpacity, View, Dimensions } from "react-native";
+import { ActivityIndicator, AppState, Image, LogBox, NativeEventEmitter, NativeModules, PermissionsAndroid, Platform, StyleSheet, Text, TouchableOpacity, View, Dimensions } from "react-native";
 import { captureScreen, captureRef } from 'react-native-view-shot';
 
 LogBox.ignoreLogs(["The app is running using the Legacy Architecture"]);
@@ -58,6 +58,7 @@ export default function App() {
   const bridgeReadyRef = useRef(false);
   const serverReadyRef = useRef(false);
   const storagePathRef = useRef<string>("");
+  const launcherConfigRef = useRef<{ updateEndpoint: string; remoteServerUrl: string } | null>(null);
   const viewRef = useRef<View>(null);
   const offscreenViewRef = useRef<View>(null);
   const rotationRef = useRef("landscape-left");
@@ -79,14 +80,24 @@ export default function App() {
   const { activeDisplay, refetchSequences } = useScheduler(BASE_URL);
   const { fetchSchedule, applySchedule } = useTvSchedule(BASE_URL);
 
+  // --- Récupère la config serveur depuis le launcher ---
+  const fetchLauncherConfig = useCallback(async () => {
+    try {
+      const cfg = await NativeModules.LauncherConfig?.getServerConfig?.();
+      if (cfg) launcherConfigRef.current = cfg;
+    } catch {}
+  }, []);
+
   // --- Initialise le dossier Documents et passe à l'état granted ---
   const initAndGrant = useCallback(async () => {
     const mod = NativeModules.StorageModule;
+    await fetchLauncherConfig();
     const result: { path: string; isEmpty: boolean; fileCount: number } = await mod.initFolder(FOLDER_NAME);
     storagePathRef.current = result.path;
     setStoragePath(result.path);
+    await mod.seedDefaultWidgets(result.path + "/widgets").catch(() => {});
     setPermState("granted");
-  }, []);
+  }, [fetchLauncherConfig]);
 
   // --- Vérification permission au démarrage ---
   useEffect(() => {
@@ -100,6 +111,16 @@ export default function App() {
         }
         const hasAccess: boolean = await mod.hasAccess();
         if (!hasAccess) {
+          if (Platform.Version < 30) {
+            // Android 9/10 : demander WRITE_EXTERNAL_STORAGE via dialog runtime
+            const result = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+            );
+            if (result === PermissionsAndroid.RESULTS.GRANTED) {
+              await initAndGrant();
+              return;
+            }
+          }
           setPermState("needs-permission");
           return;
         }
@@ -125,6 +146,19 @@ export default function App() {
     });
     return () => sub.remove();
   }, [permState, initAndGrant]);
+
+  // --- Écoute les changements de config serveur depuis le launcher ---
+  useEffect(() => {
+    if (!NativeModules.LauncherConfig) return;
+    const emitter = new NativeEventEmitter(NativeModules.LauncherConfig);
+    const sub = emitter.addListener("serverConfigChanged", (cfg) => {
+      launcherConfigRef.current = cfg;
+      if (nodejs && serverReadyRef.current) {
+        nodejs.channel.send(JSON.stringify({ type: "launcher-config-changed", launcherConfig: cfg }));
+      }
+    });
+    return () => sub.remove();
+  }, []);
 
   // --- Screen dimensions ---
   useEffect(() => {
@@ -217,6 +251,7 @@ export default function App() {
             nodejs?.channel.send(JSON.stringify({
               type: "storage-path",
               path: storagePathRef.current || DEFAULT_STORAGE_PATH,
+              launcherConfig: launcherConfigRef.current,
             }));
             break;
           case "server-ready":
@@ -376,22 +411,34 @@ export default function App() {
     );
   }
 
-  // --- Permission MANAGE_EXTERNAL_STORAGE requise ---
+  // --- Permission stockage requise ---
   if (permState === "needs-permission") {
+    const isLegacyStorage = Platform.Version < 30;
     return (
       <View style={styles.permScreen}>
         <Image source={require("./assets/images/logo.png")} style={styles.permLogo} resizeMode="contain" />
         <Text style={styles.permTitle}>Autorisation requise</Text>
-        <Text style={styles.permText}>
-          L'application a besoin d'accéder au dossier{" "}
-          <Text style={{ color: "#facc15", fontWeight: "700" }}>Documents</Text>{" "}
-          pour stocker vos médias et configurations.{"\n\n"}
-          Une page de réglages va s'ouvrir — activez l'interrupteur{" "}
-          <Text style={{ color: "#facc15", fontWeight: "700" }}>
-            "Autoriser la gestion de tous les fichiers"
-          </Text>{" "}
-          puis revenez dans l'application.
-        </Text>
+        {isLegacyStorage ? (
+          <Text style={styles.permText}>
+            L'application a besoin d'accéder au dossier{" "}
+            <Text style={{ color: "#facc15", fontWeight: "700" }}>Documents</Text>{" "}
+            pour stocker vos médias et configurations.{"\n\n"}
+            Les réglages de l'application vont s'ouvrir — accordez la permission{" "}
+            <Text style={{ color: "#facc15", fontWeight: "700" }}>Stockage</Text>{" "}
+            puis revenez dans l'application.
+          </Text>
+        ) : (
+          <Text style={styles.permText}>
+            L'application a besoin d'accéder au dossier{" "}
+            <Text style={{ color: "#facc15", fontWeight: "700" }}>Documents</Text>{" "}
+            pour stocker vos médias et configurations.{"\n\n"}
+            Une page de réglages va s'ouvrir — activez l'interrupteur{" "}
+            <Text style={{ color: "#facc15", fontWeight: "700" }}>
+              "Autoriser la gestion de tous les fichiers"
+            </Text>{" "}
+            puis revenez dans l'application.
+          </Text>
+        )}
         <TouchableOpacity
           style={[styles.permBtn, permBtnFocused && styles.permBtnFocused]}
           hasTVPreferredFocus

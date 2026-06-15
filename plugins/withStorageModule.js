@@ -5,7 +5,7 @@ const { withMainApplication, withDangerousMod } = require('@expo/config-plugins'
 const path = require('path');
 const fs = require('fs');
 
-const STORAGE_MODULE_KT = `package com.ehyoussef.tvviewerdev
+const STORAGE_MODULE_KT = `package com.tvviewer.app
 
 import android.content.Intent
 import android.net.Uri
@@ -185,7 +185,7 @@ class StorageModule(reactContext: ReactApplicationContext) :
 }
 `;
 
-const STORAGE_PACKAGE_KT = `package com.ehyoussef.tvviewerdev
+const STORAGE_PACKAGE_KT = `package com.tvviewer.app
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule
@@ -209,7 +209,7 @@ function withStorageKotlinFiles(config) {
     (cfg) => {
       const androidSrc = path.join(
         cfg.modRequest.platformProjectRoot,
-        'app', 'src', 'main', 'java', 'com', 'ehyoussef', 'tvviewerdev'
+        'app', 'src', 'main', 'java', 'com', 'tvviewer', 'player'
       );
       fs.mkdirSync(androidSrc, { recursive: true });
       fs.writeFileSync(path.join(androidSrc, 'StorageModule.kt'), STORAGE_MODULE_KT, 'utf8');
@@ -230,7 +230,7 @@ function withStoragePackageRegistration(config) {
     // Ajoute l'import après l'import ReactNativeHostWrapper
     contents = contents.replace(
       /(import expo\.modules\.ReactNativeHostWrapper)/,
-      '$1\nimport com.ehyoussef.tvviewerdev.StoragePackage'
+      '$1\nimport com.tvviewer.app.StoragePackage'
     );
 
     // Ajoute add(StoragePackage()) dans le bloc apply {}

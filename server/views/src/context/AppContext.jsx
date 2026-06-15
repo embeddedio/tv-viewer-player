@@ -35,6 +35,11 @@ export function AppProvider({ children }) {
     setLogoInfo(r?.logo || null);
   }, []);
 
+  const reloadWidgets = useCallback(async () => {
+    const r = await api('/api/widgets');
+    setWidgets(Array.isArray(r) ? r : []);
+  }, []);
+
   const reload = useCallback(async () => {
     const [filesR, foldersR, seqR, layR, settingsR, logoR, widgetsR] = await Promise.all([
       api('/files'),
@@ -65,7 +70,7 @@ export function AppProvider({ children }) {
     <AppContext.Provider
       value={{
         mediaFiles, folders, allSequences, layouts, orientation, screenConfig, logoInfo, widgets,
-        reload, reloadMedia, reloadFolders, reloadSequences, reloadLogo,
+        reload, reloadMedia, reloadFolders, reloadSequences, reloadLogo, reloadWidgets,
         setOrientation, setScreenConfig, setAllSequences, setMediaFiles, setLogoInfo,
       }}
     >

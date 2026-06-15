@@ -1,0 +1,8 @@
+{
+  "type": "meteo",
+  "label": "Météo",
+  "icon": "🌤️",
+  "settingsPages": {
+    "item": "/widgets/meteo/settings-item.html"
+  }
+}

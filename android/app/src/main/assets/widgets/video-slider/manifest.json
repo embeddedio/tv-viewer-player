@@ -1,0 +1,9 @@
+{
+  "type": "video-slider",
+  "label": "Vidéo Slider",
+  "icon": "🎬",
+  "native": true,
+  "settingsPages": {
+    "item": "/widgets/video-slider/settings-item.html"
+  }
+}

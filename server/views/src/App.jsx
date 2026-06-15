@@ -7,6 +7,7 @@ import DashboardPage from './pages/Dashboard/DashboardPage';
 import PlanificationPage from './pages/Planification/PlanificationPage';
 import MediasPage from './pages/Medias/MediasPage';
 import ConfigurationPage from './pages/Configuration/ConfigurationPage';
+import WidgetsPage from './pages/Widgets/WidgetsPage';
 import Spinner from './components/ui/Spinner';
 import UploadToast from './components/ui/UploadToast';
 
@@ -35,6 +36,7 @@ function AppRoutes() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/planification" element={<PlanificationPage />} />
             <Route path="/medias" element={<MediasPage />} />
+            <Route path="/widgets" element={<WidgetsPage />} />
             <Route path="/configuration" element={<ConfigurationPage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>

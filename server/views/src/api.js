@@ -123,3 +123,29 @@ export async function uploadFiles(fileList, { category = 'media', folder = null,
 export function uploadsUrl(filename) {
   return `${BASE}/uploads/${encodeURIComponent(filename)}`;
 }
+
+/** Installe un widget depuis un fichier ZIP avec progression (UploadToast) */
+export async function installWidget(file) {
+  if (!file) return null;
+
+  emitUpload('start', { label: file.name, fileName: file.name });
+
+  try {
+    emitUpload('progress', { phase: 'encoding', percent: 0, fileName: file.name });
+    const data = await fileToBase64WithProgress(file, (fp) => {
+      emitUpload('progress', { phase: 'encoding', percent: Math.round(fp * 0.4), fileName: file.name });
+    });
+
+    emitUpload('progress', { phase: 'uploading', percent: 40, fileName: file.name });
+
+    const result = await postJsonWithProgress('/api/widgets/install', { name: file.name, data }, (xhrPct) => {
+      emitUpload('progress', { phase: 'uploading', percent: 40 + Math.round(xhrPct * 0.55) });
+    });
+
+    emitUpload('done', { success: !!(result?.success) });
+    return result;
+  } catch {
+    emitUpload('done', { success: false });
+    return null;
+  }
+}

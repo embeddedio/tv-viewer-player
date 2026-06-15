@@ -1,4 +1,4 @@
-package com.ehyoussef.tvviewerdev
+package com.tvviewer.app
 
 import android.app.Application
 import android.content.res.Configuration
@@ -15,8 +15,8 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
-import com.ehyoussef.tvviewerdev.StoragePackage
-import com.ehyoussef.tvviewerdev.SystemUIPackage
+import com.tvviewer.app.StoragePackage
+import com.tvviewer.app.SystemUIPackage
 
 class MainApplication : Application(), ReactApplication {
 
@@ -27,6 +27,7 @@ class MainApplication : Application(), ReactApplication {
             PackageList(this).packages.apply {
               add(StoragePackage())
               add(SystemUIPackage())
+              add(LauncherConfigPackage())
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
             }

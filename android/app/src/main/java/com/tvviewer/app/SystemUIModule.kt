@@ -1,4 +1,4 @@
-package com.ehyoussef.tvviewerdev
+package com.tvviewer.app
 
 import android.os.Build
 import android.view.View
