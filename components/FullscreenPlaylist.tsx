@@ -3,6 +3,15 @@ import { Animated, Easing, StyleSheet, Text, View } from "react-native";
 import { VideoView } from "expo-video";
 import VideoViewWrapper from "./VideoViewWrapper";
 
+// Durée d'affichage sûre en ms : au moins 1s, jamais 0/NaN/négative.
+// Sans ce garde-fou, une métadonnée endommagée (duration <= 0) déclenche un
+// setTimeout(0) en boucle → CPU 100% → l'app (et la box) se figent.
+function safeDurationMs(d: unknown, fallbackSec = 10): number {
+  const n = Number(d);
+  const sec = Number.isFinite(n) && n > 0 ? n : fallbackSec;
+  return Math.max(1, sec) * 1000;
+}
+
 interface FullscreenPlaylistProps {
   items: {
     name: string;
@@ -28,7 +37,13 @@ export default function FullscreenPlaylist({
   timerRef,
   rotation = "landscape-left", // Valeur par défaut
 }: FullscreenPlaylistProps) {
-  const current = items[index % items.length];
+  // Garde-fou playlist vide : items[index % 0] = items[NaN] = undefined → crash.
+  // On utilise un placeholder neutre (sans return anticipé, pour ne pas casser
+  // l'ordre des hooks ci-dessous).
+  const hasItems = Array.isArray(items) && items.length > 0;
+  const current = hasItems
+    ? items[index % items.length]
+    : { name: "", originalName: "", category: "media", duration: 10 };
   const uri = `${baseUrl}/uploads/${encodeURIComponent(current.name)}`;
   const displayName = current.originalName || current.name;
   const isImage = /\.(png|jpg|jpeg|gif|webp|bmp|svg)$/i.test(current.name);
@@ -76,9 +91,10 @@ export default function FullscreenPlaylist({
       timerRef.current = null;
     }
     if (isVideo) return; // pas de timer pour les videos
+    if (!hasItems) return; // rien à faire tant que la playlist est vide
     timerRef.current = setTimeout(() => {
       advance();
-    }, current.duration * 1000);
+    }, safeDurationMs(current.duration));
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current as any);

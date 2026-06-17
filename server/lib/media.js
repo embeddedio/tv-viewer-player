@@ -149,7 +149,9 @@ const listFilesAsync = async () => {
           originalName: entry.originalName || entry.name,
           category: allowedCategories.includes(category) ? category : 'media',
           size: stats.size,
-          duration: entry.duration || DEFAULT_DURATION,
+          // Clamp >= 1s : une durée 0/négative/NaN provoquerait un setTimeout(0)
+          // côté player → boucle de lecture infinie (CPU 100%, UI figée).
+          duration: Math.max(1, parseInt(String(entry.duration), 10) || DEFAULT_DURATION),
           folder: entry.folder || null,
         };
       } catch (_) { return null; }

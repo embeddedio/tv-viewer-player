@@ -4,8 +4,8 @@ import { uploadFiles } from '../../api';
 import { showAlert } from '../../components/ui/Alert';
 import Spinner from '../../components/ui/Spinner';
 
-export default function ImportModal({ folders, onClose, onImported }) {
-  const [selectedFolder, setSelectedFolder] = useState(null);
+export default function ImportModal({ folders, onClose, onImported, initialFolder = null }) {
+  const [selectedFolder, setSelectedFolder] = useState(initialFolder);
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);

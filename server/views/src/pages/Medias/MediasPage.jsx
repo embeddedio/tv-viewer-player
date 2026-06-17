@@ -1,16 +1,15 @@
 import PageShell from '../../components/layout/PageShell';
-import Card from '../../components/ui/Card';
 import AlertContainer from '../../components/ui/Alert';
-import MediaTable from './MediaTable';
+import MediaExplorer from './MediaExplorer';
 
 export default function MediasPage() {
   return (
-    <PageShell>
+    <PageShell scroll={false} className="h-full flex flex-col max-md:h-auto">
       <AlertContainer />
-      <h2 className="mb-5 text-lg font-semibold">Gestion des médias</h2>
-      <Card className="p-0 overflow-hidden">
-        <MediaTable />
-      </Card>
+      <h2 className="text-lg font-semibold text-text mb-4 shrink-0">Gestion des médias</h2>
+      <div className="flex-1 min-h-0 max-md:min-h-[480px]">
+        <MediaExplorer />
+      </div>
     </PageShell>
   );
 }

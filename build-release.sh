@@ -4,7 +4,7 @@
 #
 # Usage :
 #   ./build-release.sh                  # build release + install sur $DEVICE + affiche le chemin
-#   ./build-release.sh 10.42.0.33:5555  # cible un boîtier précis (ou export DEVICE=...)
+#   ./build-release.sh 10.42.0.99:5555  # cible un boîtier précis (ou export DEVICE=...)
 #   SKIP_INSTALL=1 ./build-release.sh   # build seulement, pas d'install
 #   SYNC=1 ./build-release.sh           # rsync server/ → nodejs-assets/ avant le build
 #
@@ -12,7 +12,7 @@ set -e
 
 # --- Config (surchargeable par variables d'env) ---
 ADB="${ADB:-$HOME/Android/Sdk/platform-tools/adb}"
-DEVICE="${1:-${DEVICE:-10.42.0.33:5555}}"
+DEVICE="${1:-${DEVICE:-10.42.0.99:5555}}"
 PACKAGE="${PACKAGE:-com.tvviewer.app}"
 APK="android/app/build/outputs/apk/release/app-release.apk"
 

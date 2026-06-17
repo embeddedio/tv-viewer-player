@@ -1,7 +1,7 @@
 const variants = {
-  primary: 'bg-gradient-to-br from-green to-accent text-bg hover:shadow-[0_4px_12px_rgba(34,211,238,0.3)] hover:-translate-y-px',
+  primary: 'bg-gradient-to-br from-accent to-accent2 text-white hover:shadow-[0_4px_14px_rgb(var(--color-accent)/0.35)] hover:-translate-y-px',
   danger: 'bg-red text-white hover:bg-red/80',
-  secondary: 'bg-white/[0.08] text-text border border-border hover:bg-white/[0.12]',
+  secondary: 'bg-surface text-text border border-border hover:border-border-hover hover:bg-card2',
 };
 
 export default function Button({ variant = 'primary', sm, className = '', children, ...rest }) {

@@ -4,6 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TV Viewer - Administration</title>
+    <script>
+      // Pré-hydratation : applique le thème avant le rendu React (évite le flash au reload)
+      (function () {
+        try {
+          if (localStorage.getItem('admin-theme') === 'light') {
+            document.documentElement.classList.add('light');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body class="bg-bg text-text min-h-screen font-sans">
     <div id="root"></div>

@@ -3,6 +3,9 @@ import { Animated, Image, Platform, StyleSheet, Text, View } from "react-native"
 
 const logoImage = require("../assets/images/logo.png");
 const MIN_DISPLAY_MS = 5000;
+// Garde-fou : on ne reste jamais bloqué sur le splash, même si le serveur ne
+// répond pas (ex. boîtier sans réseau au démarrage). Passé ce délai, on démarre.
+const MAX_DISPLAY_MS = 12000;
 
 type NetInfo = { type: string; ip: string };
 
@@ -37,6 +40,7 @@ interface Props {
 export default function SplashScreen({ ready, errorMessage = null, onFinish }: Props) {
   const [fadeAnim] = useState(() => new Animated.Value(1));
   const [minElapsed, setMinElapsed] = useState(false);
+  const [maxElapsed, setMaxElapsed] = useState(false);
   const [waiting, setWaiting] = useState(false);
   const finishedRef = useRef(false);
   const addresses = useNetworkAddresses();
@@ -47,16 +51,24 @@ export default function SplashScreen({ ready, errorMessage = null, onFinish }: P
     return () => clearTimeout(t);
   }, []);
 
-  // Dismiss dès que les deux conditions sont remplies
+  // Garde-fou : dismiss forcé après MAX_DISPLAY_MS quoi qu'il arrive
   useEffect(() => {
-    if (!minElapsed || (!ready && !errorMessage) || finishedRef.current) return;
+    const t = setTimeout(() => setMaxElapsed(true), MAX_DISPLAY_MS);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Dismiss dès que le serveur est prêt (ou erreur) après le minimum,
+  // OU au plus tard à l'expiration du garde-fou (jamais figé).
+  useEffect(() => {
+    const canDismiss = (minElapsed && (ready || errorMessage)) || maxElapsed;
+    if (!canDismiss || finishedRef.current) return;
     finishedRef.current = true;
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: 500,
       useNativeDriver: true,
     }).start(() => onFinish());
-  }, [minElapsed, ready, errorMessage, onFinish, fadeAnim]);
+  }, [minElapsed, maxElapsed, ready, errorMessage, onFinish, fadeAnim]);
 
   // Indicateur visuel si on attend le serveur après les 5s
   useEffect(() => {

@@ -2,6 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Police auto-hébergée (aucun CDN Google — WebView possiblement hors-ligne) ── */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/Inter-Variable.woff2') format('woff2-variations'),
+       url('/fonts/Inter-Variable.woff2') format('woff2');
+}
+
+/* ── Tokens de thème — canaux RGB séparés par espaces (consommés par tailwind via
+   rgb(var(--color-x) / <alpha-value>)). Sombre = défaut sur :root (pas de flash). ── */
+:root {
+  --color-bg: 3 7 18;
+  --color-card: 15 23 42;
+  --color-card2: 17 24 39;
+  --color-surface: 30 41 59;
+  --color-text: 241 245 249;
+  --color-text-muted: 148 163 184;
+  --color-text-dim: 100 116 139;
+  --color-accent: 99 102 241;
+  --color-accent2: 129 140 248;
+  --color-green: 74 222 128;
+  --color-red: 239 68 68;
+  --color-yellow: 251 191 36;
+  --color-orange: 251 146 60;
+  --color-border: 30 41 59;
+  --color-border-hover: 51 65 85;
+  --nav-bg: 3 7 18;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.30), 0 4px 16px rgb(0 0 0 / 0.25);
+  color-scheme: dark;
+}
+
+:root.light {
+  --color-bg: 247 248 250;
+  --color-card: 255 255 255;
+  --color-card2: 248 250 252;
+  --color-surface: 241 245 249;
+  --color-text: 15 23 42;
+  --color-text-muted: 71 85 105;
+  --color-text-dim: 100 116 139;
+  --color-accent: 79 70 229;
+  --color-accent2: 99 102 241;
+  --color-green: 22 163 74;
+  --color-red: 220 38 38;
+  --color-yellow: 217 119 6;
+  --color-orange: 234 88 12;
+  --color-border: 226 232 240;
+  --color-border-hover: 203 213 225;
+  --nav-bg: 255 255 255;
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.06), 0 4px 16px rgb(15 23 42 / 0.08);
+  color-scheme: light;
+}
+
 @layer base {
   html, body, #root {
     height: 100%;
@@ -9,7 +63,13 @@
   }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* Transition douce lors du switch de thème (activée après le 1er paint) */
+  html.theme-ready body,
+  html.theme-ready body * {
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease;
   }
 }
 
@@ -26,4 +86,9 @@
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

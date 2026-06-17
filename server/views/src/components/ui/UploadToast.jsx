@@ -47,13 +47,14 @@ export default function UploadToast() {
 
   const icon = isSuccess ? '✓' : isError ? '✕' : '↑';
 
-  const iconBg    = isSuccess ? '#4ade8018' : isError ? '#ef444418' : '#22d3ee12';
-  const iconBorder = isSuccess ? '#4ade8030' : isError ? '#ef444430' : '#22d3ee28';
-  const iconColor  = isSuccess ? '#4ade80'  : isError ? '#ef4444'  : '#22d3ee';
+  const sem = isSuccess ? '--color-green' : isError ? '--color-red' : '--color-accent';
+  const iconBg     = `rgb(var(${sem}) / 0.10)`;
+  const iconBorder = `rgb(var(${sem}) / 0.30)`;
+  const iconColor  = `rgb(var(${sem}))`;
 
   const barBg = isDone
-    ? (isSuccess ? '#4ade80' : '#ef4444')
-    : 'linear-gradient(90deg, #22d3ee, #6366f1)';
+    ? `rgb(var(${sem}))`
+    : 'linear-gradient(90deg, rgb(var(--color-accent)), rgb(var(--color-accent2)))';
 
   const phaseLabel = isSuccess
     ? 'Envoi terminé !'
@@ -71,11 +72,11 @@ export default function UploadToast() {
       transform: 'translateX(-50%)',
       width: 'min(460px, calc(100vw - 32px))',
       zIndex: 9999,
-      background: '#0f172a',
-      border: '1px solid rgba(255,255,255,0.12)',
+      background: 'rgb(var(--color-card))',
+      border: '1px solid rgb(var(--color-border))',
       borderRadius: 16,
       padding: '16px 20px 14px',
-      boxShadow: '0 16px 48px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.04)',
+      boxShadow: 'var(--shadow-card), 0 16px 48px rgb(0 0 0 / 0.35)',
       animation: 'uploadSlideIn 0.3s cubic-bezier(0.34,1.56,0.64,1)',
     }}>
 
@@ -91,29 +92,29 @@ export default function UploadToast() {
         </div>
 
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#f1f5f9', lineHeight: 1.3 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'rgb(var(--color-text))', lineHeight: 1.3 }}>
             {state.label || 'Chargement'}
           </div>
           {state.fileName && (
-            <div style={{ fontSize: 11, color: '#64748b', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <div style={{ fontSize: 11, color: 'rgb(var(--color-text-dim))', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {state.fileName}
             </div>
           )}
         </div>
 
         {!isDone && (
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#22d3ee', flexShrink: 0, lineHeight: 1.3 }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: 'rgb(var(--color-accent))', flexShrink: 0, lineHeight: 1.3 }}>
             {pct}%
           </span>
         )}
       </div>
 
       {/* Progress bar */}
-      <div style={{ height: 5, background: 'rgba(255,255,255,0.06)', borderRadius: 999, overflow: 'hidden', marginBottom: 8 }}>
+      <div style={{ height: 5, background: 'rgb(var(--color-text) / 0.08)', borderRadius: 999, overflow: 'hidden', marginBottom: 8 }}>
         {isEncoding ? (
           <div style={{
             height: '100%', width: '38%', borderRadius: 999,
-            background: 'linear-gradient(90deg, transparent, #22d3ee90, transparent)',
+            background: 'linear-gradient(90deg, transparent, rgb(var(--color-accent) / 0.55), transparent)',
             animation: 'uploadShimmer 1.4s ease-in-out infinite',
           }} />
         ) : (
@@ -122,14 +123,14 @@ export default function UploadToast() {
             width: `${pct}%`,
             borderRadius: 999,
             background: barBg,
-            boxShadow: !isDone ? '0 0 10px #22d3ee35' : 'none',
+            boxShadow: !isDone ? '0 0 10px rgb(var(--color-accent) / 0.35)' : 'none',
             transition: 'width 0.22s ease, background 0.3s ease',
           }} />
         )}
       </div>
 
       {/* Phase label */}
-      <div style={{ fontSize: 10, color: '#475569' }}>
+      <div style={{ fontSize: 10, color: 'rgb(var(--color-text-muted))' }}>
         {phaseLabel}
       </div>
 

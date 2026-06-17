@@ -6,6 +6,7 @@ LogBox.ignoreLogs(["The app is running using the Legacy Architecture"]);
 import * as FileSystem from "expo-file-system/legacy";
 import LayoutRenderer from "./components/LayoutRenderer";
 import SplashScreen from "./components/SplashScreen";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { useScheduler } from "./hooks/useScheduler";
 import { useTvSchedule } from "./hooks/useTvSchedule";
 import { WidgetBridgeProvider } from "./contexts/WidgetBridgeContext";
@@ -362,19 +363,31 @@ export default function App() {
     nodeStartedRef.current = true;
     // Les chemins sont envoyés en réponse au message "node-ready" de Node.js
 
-    // Fallback : server déjà actif (rechargement Metro sans restart Node)
-    const t = setTimeout(() => {
-      if (serverReadyRef.current) return;
+    // Fallback robuste : si le message bridge "server-ready" est manqué
+    // (rechargement Metro, timing), on sonde le serveur LOCAL en boucle jusqu'à
+    // ce qu'il réponde. Local (127.0.0.1) → ne dépend pas d'Internet.
+    let cancelled = false;
+    let pollTimer: ReturnType<typeof setTimeout> | null = null;
+    const pollLocalServer = () => {
+      if (cancelled || serverReadyRef.current) return;
       fetch(`${BASE_URL}/settings`)
         .then(() => {
-          if (serverReadyRef.current) return;
+          if (cancelled || serverReadyRef.current) return;
           serverReadyRef.current = true;
           setServerReady(true);
           fetchAll();
         })
-        .catch(() => {});
-    }, 3000);
-    return () => clearTimeout(t);
+        .catch(() => {
+          if (cancelled) return;
+          pollTimer = setTimeout(pollLocalServer, 2000);
+        });
+    };
+    const t = setTimeout(pollLocalServer, 3000);
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+      if (pollTimer) clearTimeout(pollTimer);
+    };
   }, [permState, storagePath, fetchAll]);
 
   // Ref pour éviter les stale closures dans le bridge listener
@@ -470,29 +483,31 @@ export default function App() {
             onFinish={() => setSplashDone(true)}
           />
         )}
-        {(previewOverride || activeDisplay) ? (
-          <LayoutRenderer
-            layoutId={(previewOverride || activeDisplay).layoutId}
-            activeDisplay={previewOverride || activeDisplay}
-            tickerConfig={tickerConfig}
-            tickerItems={tickerItems}
-            logoInfo={logoInfo}
-            baseUrl={BASE_URL}
-            rotation={rotation}
-          />
-        ) : (
-          <View style={styles.fallback}>
-            {logoInfo?.url ? (
-              <Image source={{ uri: logoInfo.url }} style={styles.logoFull} resizeMode="stretch" />
-            ) : (
-              <View style={styles.fallbackCenter}>
-                <Image source={require("./assets/images/logo.png")} style={styles.fallbackLogo} resizeMode="contain" />
-                <Text style={styles.welcomeText}>Bienvenue</Text>
-                {nodeError ? <Text style={styles.errorText}>{nodeError}</Text> : null}
-              </View>
-            )}
-          </View>
-        )}
+        <ErrorBoundary>
+          {(previewOverride || activeDisplay) ? (
+            <LayoutRenderer
+              layoutId={(previewOverride || activeDisplay).layoutId}
+              activeDisplay={previewOverride || activeDisplay}
+              tickerConfig={tickerConfig}
+              tickerItems={tickerItems}
+              logoInfo={logoInfo}
+              baseUrl={BASE_URL}
+              rotation={rotation}
+            />
+          ) : (
+            <View style={styles.fallback}>
+              {logoInfo?.url ? (
+                <Image source={{ uri: logoInfo.url }} style={styles.logoFull} resizeMode="stretch" />
+              ) : (
+                <View style={styles.fallbackCenter}>
+                  <Image source={require("./assets/images/logo.png")} style={styles.fallbackLogo} resizeMode="contain" />
+                  <Text style={styles.welcomeText}>Bienvenue</Text>
+                  {nodeError ? <Text style={styles.errorText}>{nodeError}</Text> : null}
+                </View>
+              )}
+            </View>
+          )}
+        </ErrorBoundary>
       </View>
       {offscreenDisplay && (
         <View
@@ -500,15 +515,17 @@ export default function App() {
           collapsable={false}
           style={[styles.offscreen, { left: screenDims.width }]}
         >
-          <LayoutRenderer
-            layoutId={offscreenDisplay.layoutId}
-            activeDisplay={offscreenDisplay}
-            tickerConfig={tickerConfig}
-            tickerItems={tickerItems}
-            logoInfo={logoInfo}
-            baseUrl={BASE_URL}
-            rotation="landscape-left"
-          />
+          <ErrorBoundary>
+            <LayoutRenderer
+              layoutId={offscreenDisplay.layoutId}
+              activeDisplay={offscreenDisplay}
+              tickerConfig={tickerConfig}
+              tickerItems={tickerItems}
+              logoInfo={logoInfo}
+              baseUrl={BASE_URL}
+              rotation="landscape-left"
+            />
+          </ErrorBoundary>
         </View>
       )}
     </WidgetBridgeProvider>

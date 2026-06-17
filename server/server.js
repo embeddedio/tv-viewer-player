@@ -152,7 +152,7 @@ const sampleCpu = () => {
 
 const initSnap = parseProcStat();
 if (initSnap) { prevCpuTotal = initSnap.total; prevCpuIdle = initSnap.idle; }
-setInterval(sampleCpu, 3000);
+setInterval(sampleCpu, 30000);
 
 // --- Memory via /proc/meminfo ---
 const getMemoryInfo = () => {
@@ -803,11 +803,13 @@ const startServer = async () => {
 
   server.listen(PORT, '0.0.0.0', async () => {
     console.log(`Node server ready on port ${PORT}`);
-    await refreshContentAsync();
+    // Signaler "prêt" immédiatement : le serveur écoute, l'app peut démarrer.
+    // refreshContentAsync (lecture disque) ne doit pas retarder le démarrage.
     sendToApp('server-ready', { port: PORT });
     broadcastDisplaySettings();
     const tvSched = readTvSchedule();
     sendToApp('tv-schedule-updated', { schedule: tvSched });
+    refreshContentAsync().catch((err) => console.error('refreshContent au démarrage:', err && err.message));
 
     // --- Serveur médias LED (medchange-led) lancé en parallèle sur son port dédié (9000) ---
     // Process Node partagé : isolé en try/catch pour ne pas impacter le serveur principal.

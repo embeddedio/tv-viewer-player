@@ -82,7 +82,11 @@ function ZoneContent({
     if (currentIsVideo) return;
 
     const currentItem = items[cycleIndex % items.length];
-    const duration = (currentItem?.duration || 10) * 1000;
+    // Clamp >= 1s : une durée 0/négative/NaN (métadonnée endommagée) ferait un
+    // setTimeout(0) → cycle infini → CPU 100% → app/box figées.
+    const rawSec = Number(currentItem?.duration);
+    const safeSec = Number.isFinite(rawSec) && rawSec > 0 ? rawSec : 10;
+    const duration = Math.max(1, safeSec) * 1000;
 
     cycleTimerRef.current = setTimeout(() => {
       Animated.timing(cycleFade, {
