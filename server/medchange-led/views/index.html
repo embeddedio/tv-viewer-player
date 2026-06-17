@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr" ng-app="currencyApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Exchange Dashboard</title>
+
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="assets/css/all.min.css">
+    <!-- Local Fonts -->
+    <link rel="stylesheet" href="assets/css/fonts.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        [ng-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-dark text-white overflow-hidden" ng-controller="MainController">
+
+    <!-- Config Overlay -->
+    <div id="config-overlay" class="config-overlay" ng-show="isConfigMode">
+        <div ng-include="'partials/config-menu.html'"></div>
+    </div>
+
+    <!-- Mode Toggle Buttons -->
+    <div class="position-absolute d-flex align-items-center top-controls-bar" style="top: 25px; right: 25px; z-index: 10000; gap: 1rem;" ng-cloak ng-show="!isKiosk">
+        <!-- Apply Changes (Only in Config Mode) -->
+        <button class="btn-neon btn-neon-cyan py-2 px-4" ng-show="isConfigMode" ng-click="saveSettings()">
+            <i class="fas fa-save"></i> APPLIQUER LES CHANGEMENTS
+        </button>
+
+        <button class="btn-neon btn-neon-ghost py-2 px-4" 
+                ng-class="{'active': !isConfigMode}"
+                ng-click="isConfigMode = false">
+            <i class="fas fa-desktop"></i> Dashboard
+        </button>
+        
+        <button class="btn-neon btn-neon-ghost py-2 px-4" 
+                ng-show="!isConfigMode"
+                ng-click="isConfigMode = true">
+            <i class="fas fa-cog"></i> Configuration
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container-fluid h-100 p-0 d-flex flex-column">
+        
+        <div class="d-flex flex-grow-1" style="height: calc(100% - {{settings.marqueeHeightPercent}}vh);">
+            <!-- Media Section (Left) -->
+            <div class="h-100 media-section" style="width: {{settings.mediaSectionWidth}}%; transition: width 0.5s;">
+                <media-slider urls="settings.mediaUrls" interval="settings.mediaRotationInterval"></media-slider>
+            </div>
+
+            <!-- Rates Grid (Right) -->
+            <div class="h-100 rates-grid-container" style="width: {{100 - settings.mediaSectionWidth}}%; background-color: {{settings.ratesBackgroundColor || '#0b1220'}};">
+                <div class="h-100 w-100 d-grid" 
+                     style="display: grid; 
+                            grid-template-columns: repeat({{settings.gridColumns}}, 1fr); 
+                            grid-template-rows: repeat({{settings.gridRows}}, 1fr);">
+                    
+                    <div class="grid-cell" ng-repeat="rate in displayedRates track by $index">
+                        <exchange-card 
+                            rate="rate" 
+                            is-highlighted="$index === activeCardIndex"
+                            custom-font-size="settings.customFontSize"
+                            custom-logo-size="settings.customLogoSize"
+                            custom-code-size="settings.customCodeSize"
+                            active-border-color="settings.activeCardBorderColor">
+                        </exchange-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Marquee Section (Bottom) -->
+        <div class="w-100 border-top border-secondary" style="height: {{settings.marqueeHeightPercent}}vh; background-color: var(--bg-app);" ng-if="settings.marqueeItems.length > 0">
+            <marquee-text items="settings.marqueeItems" speed="settings.marqueeSpeed" font-size="settings.marqueeFontSize"></marquee-text>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/angular.min.js"></script>
+    <script src="assets/js/socket.io.min.js"></script>
+    <script src="assets/js/angular-socket-io.min.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/services/data.service.js"></script>
+    <script src="js/services/socket.service.js"></script>
+    <script src="js/controllers/main.controller.js"></script>
+    <script src="js/directives/exchange-card.js"></script>
+    <script src="js/directives/media-slider.js"></script>
+    <script src="js/directives/marquee-text.js"></script>
+
+</body>
+</html>

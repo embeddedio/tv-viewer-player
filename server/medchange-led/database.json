@@ -1,0 +1,81 @@
+{
+  "settings": {
+    "highlightInterval": 2000,
+    "rotationInterval": 8000,
+    "mediaUrls": [
+      "/uploads/1771098282553-84764264-medchange-logo-anim.gif"
+    ],
+    "marqueeItems": [],
+    "marqueeSpeed": 555,
+    "marqueeHeightPercent": 6,
+    "marqueeFontSize": 44,
+    "gridColumns": 2,
+    "gridRows": 2,
+    "mediaSectionWidth": 25,
+    "customFontSize": 44,
+    "mediaRotationInterval": 5000,
+    "customLogoSize": 66,
+    "customCodeSize": 44,
+    "ratesBackgroundColor": "#0b1220",
+    "activeCardBorderColor": "#22d3ee",
+    "animationType": "top"
+  },
+  "rates": [
+    {
+      "code": "KWD",
+      "name": "Kuwaiti Dinar",
+      "flag": "assets/img/kwd.png",
+      "buy": 28.98,
+      "sell": 30.75,
+      "trend": "down"
+    },
+    {
+      "code": "GIP",
+      "name": "Gibraltar Pound",
+      "flag": "assets/img/gip.png",
+      "buy": 12.04,
+      "sell": 12.77,
+      "trend": "up"
+    },
+    {
+      "code": "USD",
+      "name": "US Dollar",
+      "flag": "assets/img/usd.png",
+      "buy": 8.96,
+      "sell": 9.5,
+      "trend": "down"
+    },
+    {
+      "code": "GBP",
+      "name": "British Pound",
+      "flag": "assets/img/gbp.png",
+      "buy": 12.04,
+      "sell": 12.77,
+      "trend": "up"
+    },
+    {
+      "code": "CAD",
+      "name": "Canadian Dollar",
+      "flag": "assets/img/cad.png",
+      "buy": 6.45,
+      "sell": 6.84,
+      "trend": "up"
+    },
+    {
+      "code": "EUR",
+      "name": "Euro",
+      "flag": "assets/img/eur.png",
+      "buy": 10.42,
+      "sell": 11.05,
+      "trend": "up"
+    },
+    {
+      "code": "CHF",
+      "name": "Swiss Franc",
+      "flag": "assets/img/chf-1.png",
+      "buy": 11.37,
+      "sell": 12.06,
+      "trend": "up"
+    }
+  ]
+}

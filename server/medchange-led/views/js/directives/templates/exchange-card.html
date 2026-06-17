@@ -1,0 +1,55 @@
+<div class="exchange-card h-100 w-100"
+     ng-class="{'active': isHighlighted}"
+     ng-style="getCardStyle()">
+    
+    <!-- Active Glow Background -->
+    <div class="active-glow"
+         ng-style="getGlowStyle()">
+    </div>
+
+    <!-- Header -->
+    <div class="card-header">
+        <div class="flex-shrink-0">
+             <img ng-src="{{rate.flag}}" alt="{{rate.code}}" class="flag-img"
+             ng-style="{'width': (customLogoSize > 0 ? customLogoSize + 'px' : '4rem'), 'height': (customLogoSize > 0 ? 'auto' : '2.5rem')}">
+        </div>
+        
+        <div class="d-flex flex-column align-items-end" style="min-width: 0;">
+            <h2 class="m-0 currency-code" 
+                ng-style="{'font-size': (customCodeSize > 0 ? customCodeSize + 'px' : '2.5rem')}">
+                {{rate.code}}
+            </h2>
+        </div>
+    </div>
+
+    <!-- Values Body -->
+    <div class="rate-values-container">
+        
+        <!-- Buy Column -->
+        <div class="rate-column rate-column-left">
+            <div class="w-100 d-flex flex-column align-items-center">
+                <p class="label-text">ACHAT</p>
+                <div class="d-flex align-items-center justify-content-center w-100 overflow-hidden">
+                    <p class="rate-value"
+                       ng-style="getRateTextStyle()">
+                        {{rate.buy | number:2}}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sell Column -->
+        <div class="rate-column">
+            <div class="w-100 d-flex flex-column align-items-center">
+                <p class="label-text">VENTE</p>
+                <div class="d-flex align-items-center justify-content-center w-100 overflow-hidden">
+                    <p class="rate-value"
+                       ng-style="getRateTextStyle()">
+                        {{rate.sell | number:2}}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

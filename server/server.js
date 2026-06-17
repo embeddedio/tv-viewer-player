@@ -808,6 +808,15 @@ const startServer = async () => {
     broadcastDisplaySettings();
     const tvSched = readTvSchedule();
     sendToApp('tv-schedule-updated', { schedule: tvSched });
+
+    // --- Serveur médias LED (medchange-led) lancé en parallèle sur son port dédié (9000) ---
+    // Process Node partagé : isolé en try/catch pour ne pas impacter le serveur principal.
+    try {
+      require('./medchange-led/server');
+      console.log('[Server] medchange-led démarré (port LED dédié)');
+    } catch (err) {
+      console.error('[Server] échec démarrage medchange-led:', err && err.message);
+    }
   });
 };
 

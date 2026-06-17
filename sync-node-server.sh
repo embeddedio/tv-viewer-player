@@ -23,7 +23,7 @@ mkdir -p "$(dirname "$DST")"
 # Widgets are NOT bundled — they live in external storage (Documents/tv-viewer/widgets/)
 # and are discovered at runtime by the server.
 rsync -a \
-  --exclude='views/' \
+  --exclude='/views/' \
   --exclude='data/sequences.json' \
   --exclude='data/config.json' \
   --exclude='data/metadata.json' \

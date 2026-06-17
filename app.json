@@ -10,7 +10,8 @@
       "expo-video",
       "expo-audio",
       "./plugins/withAllFilesAccess.js",
-      "./plugins/withStorageModule.js"
+      "./plugins/withStorageModule.js",
+      "./plugins/withAbiFilters.js"
     ],
     "android": {
       "edgeToEdgeEnabled": true,

@@ -1,0 +1,22 @@
+# Memory - Migration AngularJS
+
+## Context
+Project: Migration of a Digital Signage web app from React to AngularJS 1.x.
+Current Directory: `views/`
+
+## Completed Tasks
+
+### UX/UI Overhaul
+- **CSS**: Created a full Cyberpunk/Neon design system in `style.css`.
+- **Config Menu**: Completely rebuilt `config-menu.html` to match the screenshot provided by the user.
+- **Controller**: Updated `MainController` to use `ui` proxy object for handling Milliseconds <-> Seconds conversion seamlessly in the view.
+- **Exchange Cards**: Updated `exchange-card.html` to use the new CSS classes, removing Bootstrap-heavy classes and using the custom design system (borders, glows, fonts).
+
+## Final Status
+- The application now fully mimics the React version's "Neon" aesthetic.
+- Functionality is preserved.
+- The `config-menu` is a near-pixel-perfect replica of the screenshot.
+- Accessible at `/v2`.
+
+## Verification
+- User should check `/v2` to confirm the look and feel.

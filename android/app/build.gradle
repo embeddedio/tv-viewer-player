@@ -96,6 +96,13 @@ android {
         versionName "1.0.0"
 
         buildConfigField "String", "REACT_NATIVE_RELEASE_LEVEL", "\"${findProperty('reactNativeReleaseLevel') ?: 'stable'}\""
+
+        // Boîtiers Android TV = ARM uniquement. Exclut x86/x86_64 du packaging.
+        // Garantit que les .so prébuildés des AAR (libnode.so ~63 Mo en x86_64) ne sont
+        // PAS embarqués, même si une dépendance les fournit. ~78 Mo économisés sur le release.
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
     }
     signingConfigs {
         debug {

@@ -1,0 +1,35 @@
+<div class="position-relative w-100 h-100 bg-dark overflow-hidden group">
+    
+    <div ng-if="!urls || urls.length === 0" class="d-flex align-items-center justify-content-center h-100 text-muted font-black text-uppercase tracking-widest small">
+        AUCUN MÉDIA
+    </div>
+
+    <div ng-repeat="url in urls track by $index" 
+         class="position-absolute w-100 h-100 transition-fade"
+         ng-style="{'opacity': $index === currentIndex ? 1 : 0, 'z-index': $index === currentIndex ? 10 : 0}"
+         style="top:0; left:0; transition: opacity 0.7s ease-in-out;">
+        
+        <!-- Video -->
+        <video ng-if="isVideo(url) && !url.includes('giphy.com')"
+               ng-src="{{url}}" 
+               data-index="{{$index}}"
+               class="w-100 h-100" 
+               style="object-fit: fill; transform: translate3d(0,0,0);"
+               muted playsinline
+               on-ended="onVideoEnded()">
+        </video>
+
+        <!-- Image -->
+        <img ng-if="!isVideo(url) || url.includes('giphy.com')"
+             ng-src="{{url}}" 
+             class="w-100 h-100" 
+             style="object-fit: fill; transform: translate3d(0,0,0);"
+             alt="Media">
+             
+        <!-- Gradient Overlay (Only for images or inactive videos, matching React logic logic roughly) -->
+        <div ng-if="!isVideo(url)" class="position-absolute w-100 h-100" 
+             style="background: linear-gradient(to top, #020617 0%, transparent 50%, transparent 100%); pointer-events: none; top:0; opacity: 0.4;">
+        </div>
+    </div>
+
+</div>

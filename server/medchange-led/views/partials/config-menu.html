@@ -1,0 +1,205 @@
+<div class="config-wrapper h-100 d-flex flex-column">
+    
+    <!-- HEADER -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-5 border-bottom border-dark pb-4">
+        <div>
+            <h1 class="m-0 font-display italic font-black text-uppercase config-title" style="font-size: 2.5rem; letter-spacing: -2px;">
+                <i class="fas fa-microchip text-cyan mr-3"></i>
+                TERMINAL DE <span class="text-cyan">CONTRÔLE</span>
+            </h1>
+            <p class="text-muted font-weight-bold uppercase small mt-2 config-subtitle" style="letter-spacing: 0.2em;">Configuration unifiée du Dashboard</p>
+        </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="row mb-5">
+        
+        <!-- LEFT COLUMN: DISPLAY SETTINGS -->
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="neon-panel neon-panel-cyan p-4 h-100">
+                <h3 class="h5 font-black uppercase mb-4 text-white d-flex align-items-center">
+                    <i class="fas fa-sliders-h text-cyan mr-2"></i> 
+                    PARAMÈTRES AFFICHAGE
+                </h3>
+
+                <!-- Section: Grille & Rotation -->
+                <div class="mb-4">
+                    <h4 class="neon-label text-cyan mb-3">GRILLE & ROTATION</h4>
+                    <div class="row">
+                        <div class="col-6 neon-input-group input-cyan">
+                            <label class="neon-label">COLONNES GRILLE</label>
+                            <input type="number" class="neon-input" ng-model="settings.gridColumns" min="1" max="6">
+                        </div>
+                        <div class="col-6 neon-input-group input-cyan">
+                            <label class="neon-label">RANGÉES GRILLE</label>
+                            <input type="number" class="neon-input" ng-model="settings.gridRows" min="1" max="6">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 neon-input-group input-yellow">
+                            <label class="neon-label">FLASH BORDURE (S)</label>
+                            <input type="number" class="neon-input" ng-model="ui.highlightInterval" ng-model-options="{ getterSetter: true }" step="0.5" placeholder="3">
+                        </div>
+                        <div class="col-6 neon-input-group input-yellow">
+                            <label class="neon-label">ROTATION CARDS (S)</label>
+                            <input type="number" class="neon-input" ng-model="ui.rotationInterval" ng-model-options="{ getterSetter: true }" step="1" placeholder="12">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 neon-input-group input-pink">
+                            <label class="neon-label">ROTATION MÉDIA (S)</label>
+                            <input type="number" class="neon-input" ng-model="ui.mediaRotationInterval" ng-model-options="{ getterSetter: true }" step="1">
+                        </div>
+                        <div class="col-6 neon-input-group input-pink">
+                            <label class="neon-label">LARGEUR MÉDIA (%)</label>
+                            <input type="number" class="neon-input" ng-model="settings.mediaSectionWidth" min="0" max="80">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Marquee Config (Speed/Height) -->
+                <div class="mb-4">
+                    <h4 class="neon-label text-purple mb-3">MARQUEE</h4>
+                    <div class="row">
+                        <div class="col-6 neon-input-group input-purple">
+                            <label class="neon-label">VITESSE MARQUEE (S)</label>
+                            <input type="number" class="neon-input" ng-model="settings.marqueeSpeed">
+                        </div>
+                        <div class="col-6 neon-input-group input-purple">
+                            <label class="neon-label">HAUTEUR MARQUEE (%)</label>
+                            <input type="number" class="neon-input" ng-model="settings.marqueeHeightPercent">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 neon-input-group input-purple">
+                            <label class="neon-label">TAILLE TEXTE MARQUEE (PX, 0=AUTO)</label>
+                            <input type="number" class="neon-input" ng-model="settings.marqueeFontSize">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Font Sizes -->
+                <div>
+                    <h4 class="neon-label text-yellow mb-3">TAILLES CARTES</h4>
+                    <div class="row">
+                        <div class="col-6 neon-input-group">
+                            <label class="neon-label">TAILLE CHIFFRES ACHAT/VENTE (PX, 0=AUTO)</label>
+                            <input type="number" class="neon-input" ng-model="settings.customFontSize">
+                        </div>
+                        <div class="col-6 neon-input-group">
+                            <label class="neon-label">TAILLE DRAPEAU/LOGO (PX, 0=AUTO)</label>
+                            <input type="number" class="neon-input" ng-model="settings.customLogoSize">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 neon-input-group">
+                            <label class="neon-label">TAILLE CODE DEVISE (PX, 0=AUTO)</label>
+                            <input type="number" class="neon-input" ng-model="settings.customCodeSize">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Theme Colors -->
+                <div class="mt-4">
+                    <h4 class="neon-label text-cyan mb-3">THÈME ZONE DEVISES</h4>
+                    <div class="row">
+                        <div class="col-12 col-md-6 neon-input-group input-cyan">
+                            <label class="neon-label">FOND ZONE DEVISES</label>
+                            <input type="color" class="neon-input neon-color-input" ng-model="settings.ratesBackgroundColor">
+                        </div>
+                        <div class="col-12 col-md-6 neon-input-group input-yellow">
+                            <label class="neon-label">BORDURE CARTE ACTIVE</label>
+                            <input type="color" class="neon-input neon-color-input" ng-model="settings.activeCardBorderColor">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: MARQUEE MESSAGES -->
+        <div class="col-lg-6">
+            <div class="neon-panel neon-panel-purple p-4 h-100 d-flex flex-column">
+                <h3 class="h5 font-black uppercase mb-4 text-white d-flex align-items-center">
+                    <i class="fas fa-comment-dots text-purple mr-2"></i>
+                    MESSAGES DÉFILANTS
+                </h3>
+
+                <!-- Add New -->
+                <div class="d-flex mb-4">
+                    <input type="text" class="neon-input mr-3" placeholder="Ajouter une information au défilement..." ng-model="form.newMarqueeItem" ng-keypress="($event.which === 13)?addMarqueeItem():0" style="font-family: 'Roboto', sans-serif;">
+                    <button class="btn-neon btn-neon-pink btn-icon-only" ng-click="addMarqueeItem()" style="height: auto; width: 60px;">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <!-- List -->
+                <div class="flex-grow-1 overflow-auto custom-scrollbar pr-2">
+                    <div ng-if="settings.marqueeItems.length === 0" class="h-100 d-flex flex-column align-items-center justify-content-center border-2 border-secondary rounded p-5" style="border-style: dashed !important; opacity: 0.3;">
+                        <i class="fas fa-quote-left fa-2x mb-3"></i>
+                        <span class="font-weight-bold uppercase small">Liste vide</span>
+                    </div>
+
+                    <div ng-repeat="item in settings.marqueeItems track by $index" class="d-flex align-items-center bg-dark p-3 rounded mb-2 border border-secondary group-hover">
+                        <input type="text" ng-model="settings.marqueeItems[$index]" class="bg-transparent border-0 text-white font-weight-bold w-100" style="outline: none;">
+                        <div class="d-flex ml-2 gap-2">
+                            <button class="btn btn-sm text-muted hover-text-white p-1" ng-click="moveMarqueeItem($index, 'up')" ng-disabled="$first"><i class="fas fa-chevron-up"></i></button>
+                            <button class="btn btn-sm text-muted hover-text-white p-1" ng-click="moveMarqueeItem($index, 'down')" ng-disabled="$last"><i class="fas fa-chevron-down"></i></button>
+                            <button class="btn btn-sm text-danger p-1" ng-click="removeMarqueeItem($index)"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-3 text-center">
+                    <small class="neon-label" style="opacity: 0.5;">LES MODIFICATIONS SERONT APPLIQUÉES LORS DE LA SAUVEGARDE GLOBALE</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BOTTOM SECTION: MEDIA GALLERY -->
+    <div class="neon-panel p-5 position-relative">
+        <div class="border-top-gradient"></div> <!-- Top Gradient Border -->
+        
+        <div class="d-flex justify-content-between align-items-center mb-4 media-gallery-header">
+            <h3 class="h4 font-black uppercase text-white d-flex align-items-center media-gallery-title">
+                <i class="fas fa-images text-pink mr-3"></i>
+                GALERIE MÉDIA COMPLÈTE
+            </h3>
+            
+            <input type="file" id="mediaUpload" class="d-none" multiple accept="image/*,video/*" onchange="angular.element(this).scope().uploadMedia(this.files)">
+            <label for="mediaUpload" class="btn-neon btn-neon-pink mb-0 media-upload-btn">
+                <i class="fas fa-plus-circle"></i>
+                AJOUTER DES CONTENUS
+            </label>
+        </div>
+
+        <div class="row">
+             <div class="col-6 col-md-4 col-lg-2 mb-4" ng-repeat="url in settings.mediaUrls track by $index">
+                <div class="position-relative rounded overflow-hidden border border-secondary shadow-lg group-hover" style="aspect-ratio: 16/9; background: #000;">
+                    <video ng-if="url.includes('mp4') || url.includes('data:video')" src="{{url}}" class="w-100 h-100" style="object-fit: cover; opacity: 0.6;"></video>
+                    <img ng-if="!url.includes('mp4') && !url.includes('data:video')" src="{{url}}" class="w-100 h-100" style="object-fit: cover;" onerror="this.src='assets/img/placeholder-media.svg'">
+                    
+                    <div class="position-absolute w-100 h-100 d-flex flex-column justify-content-center align-items-center" style="top:0; left:0; background: rgba(2,6,23,0.8); opacity: 0; transition: opacity 0.3s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0">
+                        <div class="d-flex gap-3">
+                            <button class="btn btn-dark rounded-circle border border-secondary text-white" style="width: 40px; height: 40px;" ng-click="moveMedia($index, 'up')" ng-disabled="$first"><i class="fas fa-arrow-left"></i></button>
+                            <button class="btn btn-danger rounded-circle text-white" style="width: 40px; height: 40px;" ng-click="removeMedia($index)"><i class="fas fa-trash-alt"></i></button>
+                            <button class="btn btn-dark rounded-circle border border-secondary text-white" style="width: 40px; height: 40px;" ng-click="moveMedia($index, 'down')" ng-disabled="$last"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                        <span class="mt-2 neon-label text-white">POS: {{$index + 1}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 py-5 text-center border-2 border-secondary rounded" style="border-style: dashed !important; opacity: 0.3;" ng-if="settings.mediaUrls.length === 0">
+                <i class="fas fa-photo-video fa-3x mb-3"></i>
+                <p class="font-weight-bold uppercase">Aucun média présent</p>
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="pb-5"></div> 
+
+</div>
